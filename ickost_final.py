@@ -160,7 +160,7 @@ VIDEO_DATA = {
             {
                 "title": "용담포구(용두암)",
                 "description": "제주에서의 시티뷰",
-                "url": "https://youtu.be/dtbjk7aZNeQ",
+                "url": "https://youtu.be/vrMIBOMAE6Y?si=q7_W4aUSJTpHRmip",
                 "coordinates": [33.518360, 126.501244],
                 "distance": "2km",
                 "rating": 3.6,

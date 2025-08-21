@@ -1,1 +1,0 @@
-web: gunicorn ickost_final : app

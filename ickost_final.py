@@ -246,6 +246,24 @@ VIDEO_DATA = {
                 "distance": "3.8km",
                 "rating": 3.5,
                 "difficulty": "중급"
+            },
+             {
+                "title": "태웃개",
+                "description": "다이빙의 성지에서 바다수영",
+                "url": "https://youtu.be/HFfRwPig89g",
+                "coordinates": [33.270104, 126.691575],
+                "distance": "4km",
+                "rating": 3.8,
+                "difficulty": "고급"
+            },
+             {
+                "title": "신양섭지해수욕장(섭지코지)",
+                "description": "섭지코지 한바퀴, 바다거북 출현",
+                "url": "https://youtu.be/NUhttc9N1Ks",
+                "coordinates": [33.436283, 126.924772],
+                "distance": "5km",
+                "rating": 4.2,
+                "difficulty": "고급"
             }
             
         ]
@@ -464,7 +482,7 @@ def index():
         .map-section { margin-bottom: 40px; }
         .section-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; color: #ffffff; }
         .map-container { background: #181818; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.4); }
-        .map-container iframe { width: 100% !important; height: 700px !important; }
+        .map-container iframe { width: 100% !important; height: 750px !important; }
         .location-section { margin-bottom: 40px; }
         .location-header { display: flex; align-items: center; margin-bottom: 16px; gap: 12px; }
         .location-title { font-size: 20px; font-weight: 600; color: #ffffff; }

@@ -308,13 +308,25 @@ def create_map(video_data):
             popup_html = f"""
             <div style="width: 320px; font-family: 'Roboto', sans-serif; 
                         background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
-                <div style="position: relative; background: #000;">
+                <div style="position: relative; background: #000; cursor: pointer;" 
+                     onclick="window.open('{video['url']}', '_blank')">
                     <img src="{video.get('thumbnail', '/static/default_thumbnail.jpg')}"
                          style="width: 100%; height: 180px; object-fit: cover; display: block;">
                     <div style="position: absolute; bottom: 8px; right: 8px; 
                                 background: rgba(0,0,0,0.8); color: white; 
                                 padding: 2px 6px; border-radius: 3px; font-size: 12px;">
                         {video['duration']}
+                    </div>
+                    <div style="position: absolute; top: 50%; left: 50%; 
+                                transform: translate(-50%, -50%); 
+                                width: 48px; height: 48px; 
+                                background: rgba(255,255,255,0.9); 
+                                border-radius: 50%; 
+                                display: flex; align-items: center; justify-content: center;
+                                opacity: 0; transition: opacity 0.3s ease;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#181818">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
                     </div>
                 </div>
                 <div style="padding: 12px;">
@@ -341,6 +353,18 @@ def create_map(video_data):
                             <div style="color: #ffaa00; font-weight: 500;">★{video['rating']}</div>
                             <div>평점</div>
                         </div>
+                    </div>
+                    <div style="margin-top: 12px;">
+                        <button style="width: 100%; padding: 10px; 
+                                       background: #cc0000; color: white; 
+                                       border: none; border-radius: 6px; 
+                                       font-size: 14px; font-weight: 500; 
+                                       cursor: pointer; transition: background 0.2s ease;"
+                                onmouseover="this.style.background='#aa0000'"
+                                onmouseout="this.style.background='#cc0000'"
+                                onclick="window.open('{video['url']}', '_blank')">
+                            ▶ 영상 보기
+                        </button>
                     </div>
                 </div>
             </div>

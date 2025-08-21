@@ -264,6 +264,78 @@ VIDEO_DATA = {
                 "distance": "5km",
                 "rating": 4.2,
                 "difficulty": "고급"
+            },
+             {
+                "title": "수마포구-우뭇개해안(성산일출봉)",
+                "description": "제주 제1경을 바다에서 보는 맛",
+                "url": "https://youtu.be/Up1qNF8ES7o",
+                "coordinates": [33.460447, 126.933770],
+                "distance": "3.5km",
+                "rating": 4.2,
+                "difficulty": "고급"
+            },
+             {
+                "title": "하고수동해수욕장(우도)",
+                "description": "섬속의 섬에서",
+                "url": "https://youtu.be/-m8AwZlrwY4",
+                "coordinates": [33.514798, 126.958688],
+                "distance": "1.8km",
+                "rating": 3.6,
+                "difficulty": "초급"
+            },
+             {
+                "title": "제주카약체험-신동코지불턱(토끼섬)",
+                "description": "토끼섬엔 토끼가 없다",
+                "url": "https://youtu.be/46QuKrDwbwo4",
+                "coordinates": [33.515598, 126.902241],
+                "distance": "3.4km",
+                "rating": 3.9,
+                "difficulty": "중급"
+            },
+             {
+                "title": "월정투명카약-세기알해변",
+                "description": "김녕의 보석",
+                "url": "https://youtu.be/Ml7Cb8eoyPQ",
+                "coordinates": 33.566002, 126.779129],
+                "distance": "3.1km",
+                "rating": 3.4,
+                "difficulty": "중급"
+            },
+             {
+                "title": "북촌환해장성-목지섬",
+                "description": "다채로운 바다",
+                "url": "https://youtu.be/kKrNavJKpYc",
+                "coordinates": [33.554748, 126.710768],
+                "distance": "3.2km",
+                "rating": 3.8,
+                "difficulty": "중급"
+            },
+             {
+                "title": "함덕해수욕장-해동포구",
+                "description": "최상급 투명도",
+                "url": "https://youtu.be/fwAW_b_UdH4",
+                "coordinates": [33.544800, 126.674291],
+                "distance": "1.9km",
+                "rating": 4.2,
+                "difficulty": "초급"
+            },
+             {
+                "title": "관곶-정주항",
+                "description": "섬속을 누비는 즐거움",
+                "url": "https://youtu.be/mt4r9Hx9kBA",
+                "coordinates": [33.555509, 126.644597],
+                "distance": "3km",
+                "rating": 3.8,
+                "difficulty": "중급"
+            },
+             {
+                "title": "닭머르",
+                "description": "아무나 올 수 없는 곳(사유지)",
+                "url": "https://youtu.be/KFYn3sPHKkw",
+                "coordinates": [33.535198, 126.603058],
+                "distance": "2km",
+                "rating": 3.4,
+                "difficulty": "초급"
             }
             
         ]

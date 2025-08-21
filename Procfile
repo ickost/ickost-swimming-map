@@ -1,1 +1,1 @@
-web: gunicorn --bind 0.0.0.0:$PORT ickost_final:app
+web: gunicorn ickost_final:app --bind 0.0.0.0:$PORT

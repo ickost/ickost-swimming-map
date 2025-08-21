@@ -1,0 +1,509 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+from flask import Flask, render_template_string, jsonify
+import folium
+import json
+import requests
+from datetime import datetime
+import os
+
+app = Flask(__name__)
+
+# API 키를 환경변수로 변경
+YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
+CHANNEL_ID = os.getenv('CHANNEL_ID', 'UC82OkWXaNdFQb10wm-OY2YA')
+
+def extract_video_id(url):
+    patterns = [
+        r'(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)([a-zA-Z0-9_-]+)',
+        r'youtube\.com/watch\?.*v=([a-zA-Z0-9_-]+)'
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, url)
+        if match:
+            return match.group(1)
+    return None
+
+def format_duration(duration):
+    match = re.match(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', duration)
+    if not match:
+        return "0:00"
+    hours = int(match.group(1) or 0)
+    minutes = int(match.group(2) or 0)
+    seconds = int(match.group(3) or 0)
+    if hours > 0:
+        return f"{hours}:{minutes:02d}:{seconds:02d}"
+    else:
+        return f"{minutes}:{seconds:02d}"
+
+def format_view_count(count):
+    count = int(count)
+    if count >= 10000:
+        return f"{count/10000:.1f}만"
+    elif count >= 1000:
+        return f"{count/1000:.1f}천"
+    else:
+        return str(count)
+
+def format_date(date_str):
+    try:
+        date_obj = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+        return date_obj.strftime('%Y년 %m월 %d일')
+    except:
+        return date_str
+
+def get_youtube_video_info(video_url):
+    video_id = extract_video_id(video_url)
+    if not video_id or not YOUTUBE_API_KEY:
+        return {
+            'duration': '8:45',
+            'viewCount': '2.1만',
+            'publishedAt': '2024년 8월 21일',
+            'title': None
+        }
+    
+    try:
+        url = f"https://www.googleapis.com/youtube/v3/videos"
+        params = {
+            'part': 'snippet,contentDetails,statistics',
+            'id': video_id,
+            'key': YOUTUBE_API_KEY
+        }
+        response = requests.get(url, params=params, timeout=10)
+        data = response.json()
+        
+        if 'items' in data and len(data['items']) > 0:
+            item = data['items'][0]
+            snippet = item.get('snippet', {})
+            content_details = item.get('contentDetails', {})
+            statistics = item.get('statistics', {})
+            
+            return {
+                'duration': format_duration(content_details.get('duration', 'PT0S')),
+                'viewCount': format_view_count(statistics.get('viewCount', '0')),
+                'publishedAt': format_date(snippet.get('publishedAt', '')),
+                'title': snippet.get('title'),
+                'description': snippet.get('description', '')[:100] + '...' if len(snippet.get('description', '')) > 100 else snippet.get('description', '')
+            }
+    except Exception as e:
+        print(f"YouTube API 오류: {e}")
+    
+    return {
+        'duration': '8:45',
+        'viewCount': '2.1만',
+        'publishedAt': '2024년 8월 21일',
+        'title': None
+    }
+
+def get_channel_info():
+    try:
+        url = f"https://www.googleapis.com/youtube/v3/channels"
+        params = {
+            'part': 'snippet,statistics',
+            'id': CHANNEL_ID,
+            'key': YOUTUBE_API_KEY
+        }
+        response = requests.get(url, params=params, timeout=10)
+        data = response.json()
+        
+        if 'items' in data and len(data['items']) > 0:
+            item = data['items'][0]
+            snippet = item.get('snippet', {})
+            statistics = item.get('statistics', {})
+            
+            subscriber_count = statistics.get('subscriberCount', '0')
+            video_count = statistics.get('videoCount', '0')
+            
+            if subscriber_count == '0' or not subscriber_count:
+                subscriber_display = '구독자 수 비공개'
+            else:
+                subscriber_display = format_view_count(int(subscriber_count))
+            
+            thumbnails = snippet.get('thumbnails', {})
+            thumbnail_url = (
+                thumbnails.get('high', {}).get('url') or
+                thumbnails.get('medium', {}).get('url') or 
+                thumbnails.get('default', {}).get('url') or
+                'https://yt3.googleusercontent.com/ytc/AIdro_kKZQj_1yJSZS-8l3v1kS_CXQwc8XggO4ybfQ=s176-c-k-c0x00ffffff-no-rj'
+            )
+            
+            return {
+                'subscriberCount': subscriber_display,
+                'videoCount': video_count,
+                'title': snippet.get('title', 'ICKOST'),
+                'thumbnail': thumbnail_url
+            }
+    except Exception as e:
+        print(f"채널 정보 오류: {e}")
+    
+    return {
+        'subscriberCount': '5.2만',
+        'videoCount': '127',
+        'title': 'ICKOST',
+        'thumbnail': 'https://yt3.googleusercontent.com/ytc/AIdro_kKZQj_1yJSZS-8l3v1kS_CXQwc8XggO4ybfQ=s176-c-k-c0x00ffffff-no-rj'
+    }
+
+VIDEO_DATA = {
+    "제주도": {
+        "videos": [
+            {
+                "title": "삼양감수탕",
+                "description": "제주도 바다수영의 성지",
+                "url": "https://youtu.be/CQ8i9V3n_3U",
+                "coordinates": [33.525243, 126.583098],
+                "distance": "500m",
+                "rating": 4.8,
+                "difficulty": "초급"
+            },
+            {
+                "title": "용담포구(용두암)",
+                "description": "제주 시티뷰 바다수영",
+                "url": "https://youtu.be/dtbjk7aZNeQ",
+                "coordinates": [33.518360, 126.501244],
+                "distance": "800m",
+                "rating": 4.5,
+                "difficulty": "중급"
+            },
+            {
+                "title": "현사포구",
+                "description": "제주 시티뷰 바다수영",
+                "url": "https://youtu.be/gyA6zATW1dM?si=nb4pRdupYV0WfuSv",
+                "coordinates": [33.498385, 126.449710],
+                "distance": "600m",
+                "rating": 4.3,
+                "difficulty": "초급"
+            },
+            {
+                "title": "구엄포구-고내리포구",
+                "description": "물고기 천국",
+                "url": "https://youtu.be/jHV5KQXooC0",
+                "coordinates": [33.483416, 126.376398],
+                "distance": "1.2km",
+                "rating": 4.9,
+                "difficulty": "고급"
+            }
+        ]
+    },
+    "부산": {
+        "videos": [
+            {
+                "title": "해운대해수욕장",
+                "description": "전국 바다수영의 성지",
+                "url": "https://youtu.be/tESMnqgBz7E",
+                "coordinates": [35.1588, 129.1603],
+                "distance": "1.5km",
+                "rating": 4.7,
+                "difficulty": "중급"
+            },
+            {
+                "title": "송정해수욕장",
+                "description": "천지개벽한 송정앞바다",
+                "url": "https://youtu.be/u6GNpGfimaM",
+                "coordinates": [35.1785, 129.1998],
+                "distance": "900m",
+                "rating": 4.4,
+                "difficulty": "초급"
+            }
+        ]
+    },
+    "거제도": {
+        "videos": [
+            {
+                "title": "구조라해수욕장",
+                "description": "윤돌섬이 보이는 해파리천국",
+                "url": "https://youtu.be/bLmz_DcrTIw",
+                "coordinates": [34.810020, 128.686903],
+                "distance": "3.2km",
+                "rating": 3.5,
+                "difficulty": "초급"
+            }
+        ]
+    }
+}
+
+def enrich_video_data():
+    enriched_data = {}
+    for location, data in VIDEO_DATA.items():
+        enriched_videos = []
+        for video in data['videos']:
+            youtube_info = get_youtube_video_info(video['url'])
+            video_id = extract_video_id(video['url'])
+            enriched_video = {
+                **video,
+                'thumbnail': f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg",
+                'duration': youtube_info['duration'],
+                'views': youtube_info['viewCount'],
+                'date': youtube_info['publishedAt'],
+                'title': youtube_info['title'] if youtube_info['title'] else video['title']
+            }
+            enriched_videos.append(enriched_video)
+        enriched_data[location] = {'videos': enriched_videos}
+    return enriched_data
+
+def get_difficulty_color(difficulty):
+    """난이도별 색상 반환"""
+    colors = {
+        "초급": "#00ff00",
+        "중급": "#ffaa00", 
+        "고급": "#ff4444"
+    }
+    return colors.get(difficulty, "#aaaaaa")
+
+def create_map(video_data):
+    m = folium.Map(
+        location=[33.389153, 126.562724],
+        zoom_start=11,
+        tiles='CartoDB dark_matter'
+    )
+    
+    for location, data in video_data.items():
+        for video in data['videos']:
+            popup_html = f"""
+            <div style="width: 320px; font-family: 'Roboto', sans-serif; 
+                        background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
+                <div style="position: relative; background: #000;">
+                    <img src="{video['thumbnail']}" 
+                         style="width: 100%; height: 180px; object-fit: cover; display: block;">
+                    <div style="position: absolute; bottom: 8px; right: 8px; 
+                                background: rgba(0,0,0,0.8); color: white; 
+                                padding: 2px 6px; border-radius: 3px; font-size: 12px;">
+                        {video['duration']}
+                    </div>
+                </div>
+                <div style="padding: 12px;">
+                    <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #ffffff;">
+                        {video['title']}
+                    </h3>
+                    <div style="color: #aaaaaa; font-size: 13px; margin-bottom: 12px;">
+                        조회수 {video['views']}회 • {video['date']}
+                    </div>
+                    <div style="color: #aaaaaa; font-size: 13px; margin-bottom: 12px;">
+                        {video.get('description', video.get('api_description', ''))}
+                    </div>
+                    <div style="display: flex; gap: 16px; margin: 12px 0; padding: 8px 0; 
+                                border-top: 1px solid #3d3d3d;">
+                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
+                            <div style="color: #ffffff; font-weight: 500;">{video['distance']}</div>
+                            <div>거리</div>
+                        </div>
+                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
+                            <div style="color: {get_difficulty_color(video['difficulty'])}; font-weight: 500;">{video['difficulty']}</div>
+                            <div>난이도</div>
+                        </div>
+                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
+                            <div style="color: #ffaa00; font-weight: 500;">★{video['rating']}</div>
+                            <div>평점</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            """
+            
+            marker_html = '''
+            <div style="width: 32px; height: 32px; background: #ff0000; border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </div>
+            '''
+            
+            folium.Marker(
+                location=video['coordinates'],
+                popup=folium.Popup(popup_html, max_width=350),
+                tooltip=f"▶ {video['title']} ({location})",
+                icon=folium.DivIcon(html=marker_html, icon_size=(32, 32), icon_anchor=(16, 16))
+            ).add_to(m)
+    
+    return m
+
+@app.route('/')
+def index():
+    try:
+        enriched_video_data = enrich_video_data()
+        channel_info = get_channel_info()
+        folium_map = create_map(enriched_video_data)
+        map_html = folium_map._repr_html_()
+        total_videos = sum(len(data['videos']) for data in enriched_video_data.values())
+        total_locations = len(enriched_video_data)
+        all_ratings = []
+        for location_data in enriched_video_data.values():
+            for video in location_data['videos']:
+                all_ratings.append(video['rating'])
+        avg_rating = sum(all_ratings) / len(all_ratings) if all_ratings else 0
+    except Exception as e:
+        print(f"오류: {e}")
+        enriched_video_data = VIDEO_DATA
+        channel_info = get_channel_info()
+        folium_map = create_map(enriched_video_data)
+        map_html = folium_map._repr_html_()
+        total_videos = 7
+        total_locations = 3
+        avg_rating = 4.5
+
+    html = '''<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>ICKOST - 바다수영 채널</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: #0f0f0f; color: #ffffff; line-height: 1.4; }
+        .header { background: #212121; padding: 0 24px; height: 72px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #3d3d3d; }
+        .channel-info { display: flex; align-items: center; gap: 16px; }
+        .channel-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; }
+        .channel-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .channel-details h1 { font-size: 24px; font-weight: 600; color: #ffffff; margin-bottom: 2px; }
+        .channel-meta { color: #aaaaaa; font-size: 14px; }
+        .subscribe-btn { background: #cc0000; color: white; border: none; padding: 10px 16px; border-radius: 18px; font-weight: 500; font-size: 14px; cursor: pointer; margin-left: auto; transition: background 0.2s ease; }
+        .subscribe-btn:hover { background: #aa0000; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .stat-card { background: #181818; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #3d3d3d; }
+        .stat-number { font-size: 28px; font-weight: 700; color: #ffffff; display: block; margin-bottom: 4px; }
+        .stat-label { color: #aaaaaa; font-size: 14px; }
+        .map-section { margin-bottom: 40px; }
+        .section-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; color: #ffffff; }
+        .map-container { background: #181818; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.4); }
+        .map-container iframe { width: 100% !important; height: 700px !important; }
+        .location-section { margin-bottom: 40px; }
+        .location-header { display: flex; align-items: center; margin-bottom: 16px; gap: 12px; }
+        .location-title { font-size: 20px; font-weight: 600; color: #ffffff; }
+        .video-count { background: #3d3d3d; color: #aaaaaa; padding: 4px 8px; border-radius: 12px; font-size: 12px; }
+        .sort-controls { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; }
+        .sort-label { color: #aaaaaa; font-size: 14px; }
+        .sort-select { background: #181818; color: #ffffff; border: 1px solid #3d3d3d; border-radius: 8px; padding: 8px 12px; font-size: 14px; cursor: pointer; }
+        .videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .video-card { background: transparent; cursor: pointer; transition: transform 0.2s ease; }
+        .video-card:hover { transform: translateY(-4px); }
+        .video-thumbnail { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; margin-bottom: 12px; background: #181818; }
+        .video-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+        .video-duration { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: white; padding: 3px 6px; border-radius: 4px; font-size: 12px; }
+        .video-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.2s ease; display: flex; align-items: center; justify-content: center; }
+        .video-card:hover .video-overlay { opacity: 1; }
+        .play-btn { width: 48px; height: 48px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .video-info { padding: 0 4px; }
+        .video-title { font-size: 16px; font-weight: 500; color: #ffffff; margin-bottom: 6px; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .video-meta { color: #aaaaaa; font-size: 14px; margin-bottom: 8px; }
+        .video-stats { display: flex; gap: 12px; font-size: 13px; }
+        .video-stat { color: #aaaaaa; }
+        .difficulty-초급 { color: #00ff00; }
+        .difficulty-중급 { color: #ffaa00; }
+        .difficulty-고급 { color: #ff4444; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="channel-info">
+            <div class="channel-avatar"><img src="{{ channel_info.thumbnail }}" alt="{{ channel_info.title }}"></div>
+            <div class="channel-details">
+                <h1>{{ channel_info.title }}</h1>
+                <div class="channel-meta">구독자 {{ channel_info.subscriberCount }}명 • 동영상 {{ channel_info.videoCount }}개</div>
+            </div>
+        </div>
+        <button class="subscribe-btn" onclick="subscribeChannel()">구독</button>
+    </header>
+    
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card"><span class="stat-number">{{ total_locations }}</span><div class="stat-label">수영 지역</div></div>
+            <div class="stat-card"><span class="stat-number">{{ total_videos }}</span><div class="stat-label">수영 포인트</div></div>
+            <div class="stat-card"><span class="stat-number">{{ "%.1f"|format(avg_rating) }}</span><div class="stat-label">평균 평점</div></div>
+        </div>
+        
+        <section class="map-section">
+            <h2 class="section-title">📍 수영 위치 지도</h2>
+            <div class="map-container">{{ map_html|safe }}</div>
+        </section>
+        
+        {% for location, data in video_data.items() %}
+        <section class="location-section">
+            <div class="location-header">
+                <h2 class="location-title">{{ location }}</h2>
+                <span class="video-count">{{ data.videos|length }}개 영상</span>
+            </div>
+            <div class="sort-controls">
+                <span class="sort-label">정렬:</span>
+                <select class="sort-select" onchange="sortVideos('{{ location }}', this.value)">
+                    <option value="date-desc">최신순</option>
+                    <option value="views-desc">조회수 높은순</option>
+                    <option value="rating-desc">평점 높은순</option>
+                </select>
+            </div>
+            <div class="videos-grid" id="videos-{{ location }}">
+                {% for video in data.videos %}
+                <div class="video-card" onclick="window.open('{{ video.url }}', '_blank')" data-date="{{ video.date }}" data-views="{{ video.views }}" data-rating="{{ video.rating }}">
+                    <div class="video-thumbnail">
+                        <img src="{{ video.thumbnail }}" alt="{{ video.title }}">
+                        <div class="video-duration">{{ video.duration }}</div>
+                        <div class="video-overlay">
+                            <div class="play-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="#181818"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">{{ video.title }}</h3>
+                        <div class="video-meta">조회수 {{ video.views }}회 • {{ video.date }}</div>
+                        <div class="video-stats">
+                            <span class="video-stat">📏 {{ video.distance }}</span>
+                            <span class="video-stat difficulty-{{ video.difficulty }}">● {{ video.difficulty }}</span>
+                            <span class="video-stat">⭐ {{ video.rating }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+    </div>
+    
+    <script>
+        function subscribeChannel() {
+            const btn = document.querySelector('.subscribe-btn');
+            if (btn.textContent === '구독') {
+                btn.textContent = '구독 완료';
+                btn.style.background = '#606060';
+                setTimeout(() => { window.open('https://www.youtube.com/@ickost', '_blank'); }, 500);
+            } else {
+                btn.textContent = '구독';
+                btn.style.background = '#cc0000';
+            }
+        }
+        
+        function sortVideos(location, sortType) {
+            const container = document.getElementById('videos-' + location);
+            const videos = Array.from(container.querySelectorAll('.video-card'));
+            videos.sort(function(a, b) {
+                if (sortType === 'date-desc') return new Date(b.dataset.date) - new Date(a.dataset.date);
+                if (sortType === 'views-desc') return parseViews(b.dataset.views) - parseViews(a.dataset.views);
+                if (sortType === 'rating-desc') return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+                return 0;
+            });
+            videos.forEach(video => container.appendChild(video));
+        }
+        
+        function parseViews(viewsStr) {
+            const cleanStr = viewsStr.replace(/[,]/g, '');
+            if (cleanStr.includes('만')) return parseFloat(cleanStr.replace('만', '')) * 10000;
+            if (cleanStr.includes('천')) return parseFloat(cleanStr.replace('천', '')) * 1000;
+            return parseInt(cleanStr) || 0;
+        }
+    </script>
+</body>
+</html>'''
+
+    return render_template_string(html, 
+        map_html=map_html,
+        total_videos=total_videos,
+        total_locations=total_locations,
+        avg_rating=avg_rating,
+        video_data=enriched_video_data,
+        channel_info=channel_info
+    )
+
+# 앱 실행 부분 수정
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)

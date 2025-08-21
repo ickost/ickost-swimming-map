@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import re
 from flask import Flask, render_template_string, jsonify
 import folium
 import json
@@ -263,7 +264,7 @@ def create_map(video_data):
             <div style="width: 320px; font-family: 'Roboto', sans-serif; 
                         background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
                 <div style="position: relative; background: #000;">
-                    <img src="{video['thumbnail']}" 
+                    <img src="{video.get('thumbnail', '/static/default_thumbnail.jpg')}"
                          style="width: 100%; height: 180px; object-fit: cover; display: block;">
                     <div style="position: absolute; bottom: 8px; right: 8px; 
                                 background: rgba(0,0,0,0.8); color: white; 

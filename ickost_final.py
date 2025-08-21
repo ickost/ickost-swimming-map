@@ -296,7 +296,7 @@ VIDEO_DATA = {
                 "title": "월정투명카약-세기알해변",
                 "description": "김녕의 보석",
                 "url": "https://youtu.be/Ml7Cb8eoyPQ",
-                "coordinates": 33.566002, 126.779129],
+                "coordinates": [33.566002, 126.779129],
                 "distance": "3.1km",
                 "rating": 3.4,
                 "difficulty": "중급"

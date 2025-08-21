@@ -153,35 +153,53 @@ VIDEO_DATA = {
                 "description": "제주도 바다수영의 성지",
                 "url": "https://youtu.be/CQ8i9V3n_3U",
                 "coordinates": [33.525243, 126.583098],
-                "distance": "500m",
-                "rating": 4.8,
+                "distance": "1.9km",
+                "rating": 4.1,
                 "difficulty": "초급"
             },
             {
                 "title": "용담포구(용두암)",
-                "description": "제주 시티뷰 바다수영",
+                "description": "제주에서의 시티뷰",
                 "url": "https://youtu.be/dtbjk7aZNeQ",
                 "coordinates": [33.518360, 126.501244],
-                "distance": "800m",
-                "rating": 4.5,
-                "difficulty": "중급"
+                "distance": "2km",
+                "rating": 3.6,
+                "difficulty": "초급"
             },
             {
                 "title": "현사포구",
-                "description": "제주 시티뷰 바다수영",
+                "description": "500미터 인터벌 훈련",
                 "url": "https://youtu.be/gyA6zATW1dM?si=nb4pRdupYV0WfuSv",
                 "coordinates": [33.498385, 126.449710],
-                "distance": "600m",
-                "rating": 4.3,
+                "distance": "500m",
+                "rating": 3.5,
                 "difficulty": "초급"
             },
             {
                 "title": "구엄포구-고내리포구",
-                "description": "물고기 천국",
+                "description": "물고기 천국, 낚시포인트",
                 "url": "https://youtu.be/jHV5KQXooC0",
                 "coordinates": [33.483416, 126.376398],
-                "distance": "1.2km",
-                "rating": 4.9,
+                "distance": "2.8km",
+                "rating": 4.1,
+                "difficulty": "중급"
+            },
+            {
+                "title": "곽지해수욕장",
+                "description": "다양한 바다를 만날 수 있음",
+                "url": "https://youtu.be/l0lDyQEpB7k",
+                "coordinates": [33.449486, 126.303061],
+                "distance": "3km",
+                "rating": 3.7,
+                "difficulty": "중급"
+            },
+              {
+                "title": "비양도",
+                "description": "섬을 한바퀴 도는 경험",
+                "url": "https://youtu.be/4G6gIcR9PoQ",
+                "coordinates": [33.406378, 126.231167],
+                "distance": "3.8km",
+                "rating": 3.9,
                 "difficulty": "고급"
             }
         ]
@@ -194,7 +212,7 @@ VIDEO_DATA = {
                 "url": "https://youtu.be/tESMnqgBz7E",
                 "coordinates": [35.1588, 129.1603],
                 "distance": "1.5km",
-                "rating": 4.7,
+                "rating": 3.7,
                 "difficulty": "중급"
             },
             {
@@ -202,13 +220,22 @@ VIDEO_DATA = {
                 "description": "천지개벽한 송정앞바다",
                 "url": "https://youtu.be/u6GNpGfimaM",
                 "coordinates": [35.1785, 129.1998],
-                "distance": "900m",
-                "rating": 4.4,
+                "distance": "1.5m",
+                "rating": 3.2,
+                "difficulty": "초급"
+            },
+            {
+                "title": "송도해수욕장",
+                "description": "시티뷰가 좋은 포인트",
+                "url": "https://youtu.be/e1Kp4Rzkis0",
+                "coordinates": [35.075454, 129.017233],
+                "distance": "1.5m",
+                "rating": 3.4,
                 "difficulty": "초급"
             }
         ]
     },
-    "거제도": {
+    "경남": {
         "videos": [
             {
                 "title": "구조라해수욕장",

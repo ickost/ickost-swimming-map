@@ -201,6 +201,24 @@ VIDEO_DATA = {
                 "distance": "3.8km",
                 "rating": 3.9,
                 "difficulty": "고급"
+            },
+            {
+                "title": "송악산항-하도방파제",
+                "description": "서쪽제1경 송악산 한바퀴",
+                "url": "https://youtu.be/mW-nnFWoruo",
+                "coordinates": [33.205401, 126.290239],
+                "distance": "3.2km",
+                "rating": 3.7,
+                "difficulty": "중급"
+            },
+             {
+                "title": "사계항(용머리바위)",
+                "description": "바다에서 바라보는 용머리바위",
+                "url": "https://youtu.be/EeCD-p8GdZw",
+                "coordinates": [33.230389, 126.309630],
+                "distance": "2km",
+                "rating": 4.0,
+                "difficulty": "중급"
             }
         ]
     },

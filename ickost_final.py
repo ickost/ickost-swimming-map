@@ -219,7 +219,35 @@ VIDEO_DATA = {
                 "distance": "2km",
                 "rating": 4.0,
                 "difficulty": "중급"
+            },
+            {
+                "title": "월평포구-해송횟집(진곶내)",
+                "description": "오로지 물길로만 가능한 곳, 진곳",
+                "url": "https://youtu.be/qDBFv4rKnxQ",
+                "coordinates": [33.234547, 126.463455],
+                "distance": "3.4km",
+                "rating": 3.8,
+                "difficulty": "중급"
+            },
+             {
+                "title": "새연교-돔베낭골(외돌개)",
+                "description": "서귀포 필수코스",
+                "url": "https://youtu.be/WwQ7GhNW1dQ",
+                "coordinates": [33.239074, 126.558384],
+                "distance": "3.6km",
+                "rating": 3.8,
+                "difficulty": "고급"
+            },
+             {
+                "title": "자구리-구두미포구(정방폭포)",
+                "description": "바다로 떨어지는 폭포",
+                "url": "https://youtu.be/lWivFkLGLPA",
+                "coordinates": [33.243282, 126.568774],
+                "distance": "3.8km",
+                "rating": 3.5,
+                "difficulty": "중급"
             }
+            
         ]
     },
     "부산": {

@@ -892,7 +892,7 @@ html = '''<!DOCTYPE html>
 </body>
 </html>'''
 
-    return render_template_string(html,
+    return render_template_string(html, 
         map_html=map_html,
         total_videos=total_videos,
         total_locations=total_locations,

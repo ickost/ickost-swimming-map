@@ -432,7 +432,7 @@ def get_difficulty_color(difficulty):
 def create_map(video_data):
     m = folium.Map(
         location=[33.389153, 126.562724],
-        zoom_start=11,
+        zoom_start=7,
         tiles='CartoDB dark_matter'
     )
     

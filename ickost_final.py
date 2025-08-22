@@ -548,7 +548,6 @@ def index():
         total_videos = 7
         total_locations = 3
         avg_rating = 4.5
-        avg_distance = "2.7km"
 
     html = '''<!DOCTYPE html>
 <html lang="ko">
@@ -809,7 +808,6 @@ def index():
             <div class="stat-card"><span class="stat-number">{{ total_locations }}</span><div class="stat-label">수영 지역</div></div>
             <div class="stat-card"><span class="stat-number">{{ total_videos }}</span><div class="stat-label">수영 포인트</div></div>
             <div class="stat-card"><span class="stat-number">{{ "%.1f"|format(avg_rating) }}</span><div class="stat-label">평균 평점</div></div>
-            <div class="stat-card"><span class="stat-number">{{ "%.1f"|format(avg_distance) }}</span><div class="stat-label">평균 거리</div></div>
         </div>
 
         <section class="map-section">

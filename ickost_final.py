@@ -147,9 +147,9 @@ def get_channel_info():
     def get_difficulty_color(difficulty):
     """난이도별 색상 반환 (빨간색 계열)"""
     colors = {
-        "초급": "#ff6b6b",    # 밝은 빨강
-        "중급": "#ff4757",    # 중간 빨강
-        "고급": "#c44569"     # 진한 빨강
+        "초급": "#ff6b6b",
+        "중급": "#ff4757", 
+        "고급": "#c44569"
     }
     return colors.get(difficulty, "#ff0000")
 

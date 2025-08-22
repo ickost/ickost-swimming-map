@@ -432,7 +432,7 @@ def get_difficulty_color(difficulty):
 def create_map(video_data):
     m = folium.Map(
         location=[33.389153, 126.562724],
-        zoom_start=7,
+        zoom_start=9,
         tiles='CartoDB dark_matter'
     )
     
@@ -808,6 +808,7 @@ def index():
             <div class="stat-card"><span class="stat-number">{{ total_locations }}</span><div class="stat-label">수영 지역</div></div>
             <div class="stat-card"><span class="stat-number">{{ total_videos }}</span><div class="stat-label">수영 포인트</div></div>
             <div class="stat-card"><span class="stat-number">{{ "%.1f"|format(avg_rating) }}</span><div class="stat-label">평균 평점</div></div>
+            <div class="stat-card"><span class="stat-number">{{ "%.1f"|format(avg_distance) }}</span><div class="stat-label">평균 거리</div></div>
         </div>
 
         <section class="map-section">

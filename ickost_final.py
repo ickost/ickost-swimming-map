@@ -139,16 +139,17 @@ def get_channel_info():
         print(f"채널 정보 오류: {e}")
     
     return {
-        'subscriberCount': '5.2만',
-        'videoCount': '127',
+        'subscriberCount': '00만',
+        'videoCount': '00',
         'title': 'ICKOST',
-        'thumbnail': 'https://yt3.googleusercontent.com/ytc/AIdro_kKZQj_1yJSZS-8l3v1kS_CXQwc8XggO4ybfQ=s176-c-k-c0x00ffffff-no-rj'
+        'thumbnail': 'https://yt3.googleusercontent.com/2pvoyX_JUZFcrn1RD1I9SCIUF62jvpkxaK77UNs50TtM8GkjyprLPu5cIPcmE9ribNOGqL9kRA=s160-c-k-c0x00ffffff-no-rj'
     }
+    
     def get_difficulty_color(difficulty):
     """난이도별 색상 반환 (빨간색 계열)"""
     colors = {
         "초급": "#ff6b6b",
-        "중급": "#ff4757", 
+        "중급": "#ff4757",
         "고급": "#c44569"
     }
     return colors.get(difficulty, "#ff0000")
@@ -161,6 +162,7 @@ def get_channel_info():
         return 35
     else:
         return 30
+        
 VIDEO_DATA = {
     "제주도": {
         "videos": [
@@ -505,10 +507,10 @@ def create_map(video_data):
             """
             
            marker_size = get_marker_size(video['rating'])
-difficulty_color = get_difficulty_color(video['difficulty'])
+           difficulty_color = get_difficulty_color(video['difficulty'])
 
-marker_html = f'''
-<div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
+           marker_html = f'''
+           <div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
             border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
             justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;">
     <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">

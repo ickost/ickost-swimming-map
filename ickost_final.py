@@ -145,16 +145,17 @@ def get_channel_info():
         'thumbnail': 'https://yt3.googleusercontent.com/ytc/AIdro_kKZQj_1yJSZS-8l3v1kS_CXQwc8XggO4ybfQ=s176-c-k-c0x00ffffff-no-rj'
     }
     def get_difficulty_color(difficulty):
-    """난이도별 색상 반환 (빨간색 계열)"""
-    colors = {
-        "초급": "#ff6b6b",    # 밝은 빨강
-        "중급": "#ff4757",    # 중간 빨강
-        "고급": "#c44569"     # 진한 빨강
+
+     colors = {
+        "초급": "#00ff00",
+        "중급": "#ffaa00", 
+        "고급": "#ff4444"
     }
-    return colors.get(difficulty, "#ff0000")
+    return colors.get(difficulty, "#aaaaaa")
+
 
 def get_marker_size(rating):
-    """평점별 마커 크기 반환"""
+
     if rating >= 4.5:
         return 40
     elif rating >= 4.0:

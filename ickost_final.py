@@ -144,6 +144,23 @@ def get_channel_info():
         'title': 'ICKOST',
         'thumbnail': 'https://yt3.googleusercontent.com/ytc/AIdro_kKZQj_1yJSZS-8l3v1kS_CXQwc8XggO4ybfQ=s176-c-k-c0x00ffffff-no-rj'
     }
+    def get_difficulty_color(difficulty):
+    """난이도별 색상 반환 (빨간색 계열)"""
+    colors = {
+        "초급": "#fe7575",    # 밝은 빨강
+        "중급": "#fc2f2f",    # 중간 빨강
+        "고급": "#e90101"     # 진한 빨강
+    }
+    return colors.get(difficulty, "#ff0000")
+
+def get_marker_size(rating):
+    """평점별 마커 크기 반환"""
+    if rating >= 4.5:
+        return 40
+    elif rating >= 4.0:
+        return 35
+    else:
+        return 30
 
 VIDEO_DATA = {
     "제주도": {
@@ -488,19 +505,24 @@ def create_map(video_data):
             </div>
             """
             
-            marker_html = '''
-            <div style="width: 32px; height: 32px; background: #ff0000; border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                    <path d="M8 5v14l11-7z"/>
+           marker_size = get_marker_size(video['rating'])
+           difficulty_color = get_difficulty_color(video['difficulty'])
+
+           marker_html = f'''
+           <div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
+                      border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
+                      justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;">
+                <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">
+                     <path d="M8 5v14l11-7z"/>
                 </svg>
-            </div>
-            '''
+           </div>
+           '''
             
             folium.Marker(
-                location=video['coordinates'],
-                popup=folium.Popup(popup_html, max_width=350),
-                tooltip=f"▶ {video['title']} ({location})",
-                icon=folium.DivIcon(html=marker_html, icon_size=(32, 32), icon_anchor=(16, 16))
+                   location=video['coordinates'],
+                   popup=folium.Popup(popup_html, max_width=350),
+                   tooltip=f"▶ {video['title']} ({location})",
+                   icon=folium.DivIcon(html=marker_html, icon_size=(marker_size, marker_size), icon_anchor=(marker_size//2, marker_size//2))
             ).add_to(m)
     
     return m

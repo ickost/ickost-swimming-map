@@ -129,7 +129,7 @@ def get_channel_info():
                 'https://yt3.googleusercontent.com/ytc/AIdro_kKZQj_1yJSZS-8l3v1kS_CXQwc8XggO4ybfQ=s176-c-k-c0x00ffffff-no-rj'
             )
             
-            return {
+    return {
                 'subscriberCount': subscriber_display,
                 'videoCount': video_count,
                 'title': snippet.get('title', 'ICKOST'),
@@ -138,12 +138,12 @@ def get_channel_info():
     except Exception as e:
         print(f"채널 정보 오류: {e}")
     
-     return {
+    return {
         'subscriberCount': '00만',
         'videoCount': '00',
         'title': 'ICKOST',
         'thumbnail': 'https://yt3.googleusercontent.com/2pvoyX_JUZFcrn1RD1I9SCIUF62jvpkxaK77UNs50TtM8GkjyprLPu5cIPcmE9ribNOGqL9kRA=s160-c-k-c0x00ffffff-no-rj'
-    }
+            }
 
 def get_difficulty_color(difficulty):  
     """난이도별 색상 반환 (빨간색 계열)"""

@@ -505,24 +505,24 @@ def create_map(video_data):
             """
             
            marker_size = get_marker_size(video['rating'])
-           difficulty_color = get_difficulty_color(video['difficulty'])
+difficulty_color = get_difficulty_color(video['difficulty'])
 
-           marker_html = f'''
-           <div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
-                      border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
-                      justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;">
-                <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">
-                     <path d="M8 5v14l11-7z"/>
-                </svg>
-           </div>
-           '''
+marker_html = f'''
+<div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
+            border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
+            justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;">
+    <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">
+        <path d="M8 5v14l11-7z"/>
+    </svg>
+</div>
+'''
             
             folium.Marker(
-                   location=video['coordinates'],
-                   popup=folium.Popup(popup_html, max_width=350),
-                   tooltip=f"▶ {video['title']} ({location})",
-                   icon=folium.DivIcon(html=marker_html, icon_size=(marker_size, marker_size), icon_anchor=(marker_size//2, marker_size//2))
-            ).add_to(m)
+    location=video['coordinates'],
+    popup=folium.Popup(popup_html, max_width=350),
+    tooltip=f"▶ {video['title']} ({location})",
+    icon=folium.DivIcon(html=marker_html, icon_size=(marker_size, marker_size), icon_anchor=(marker_size//2, marker_size//2))
+).add_to(m)
     
     return m
 

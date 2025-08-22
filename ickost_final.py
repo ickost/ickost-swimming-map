@@ -548,6 +548,7 @@ def index():
         total_videos = 7
         total_locations = 3
         avg_rating = 4.5
+        avg_distance = "2.7km"
 
     html = '''<!DOCTYPE html>
 <html lang="ko">

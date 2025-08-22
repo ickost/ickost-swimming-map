@@ -552,58 +552,241 @@ def index():
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICKOST - 바다수영 채널</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Roboto', sans-serif; background-color: #0f0f0f; color: #ffffff; line-height: 1.4; }
-        .header { background: #212121; padding: 0 24px; height: 72px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #3d3d3d; }
-        .channel-info { display: flex; align-items: center; gap: 16px; }
-        .channel-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; }
+
+        /* 모바일 우선 스타일 */
+        .header { 
+            background: #212121; 
+            padding: 12px 16px; 
+            display: flex; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            border-bottom: 1px solid #3d3d3d; 
+        }
+        .channel-info { display: flex; align-items: center; gap: 12px; flex: 1; }
+        .channel-avatar { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; }
         .channel-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .channel-details h1 { font-size: 24px; font-weight: 600; color: #ffffff; margin-bottom: 2px; }
-        .channel-meta { color: #aaaaaa; font-size: 14px; }
-        .subscribe-btn { background: #cc0000; color: white; border: none; padding: 10px 16px; border-radius: 18px; font-weight: 500; font-size: 14px; cursor: pointer; margin-left: auto; transition: background 0.2s ease; }
+        .channel-details h1 { font-size: 18px; font-weight: 600; color: #ffffff; margin-bottom: 2px; }
+        .channel-meta { color: #aaaaaa; font-size: 12px; }
+        .subscribe-btn { 
+            background: #cc0000; 
+            color: white; 
+            border: none; 
+            padding: 8px 12px; 
+            border-radius: 18px; 
+            font-weight: 500; 
+            font-size: 13px; 
+            cursor: pointer; 
+            transition: background 0.2s ease; 
+        }
         .subscribe-btn:hover { background: #aa0000; }
-        .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
-        .stat-card { background: #181818; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #3d3d3d; }
-        .stat-number { font-size: 28px; font-weight: 700; color: #ffffff; display: block; margin-bottom: 4px; }
-        .stat-label { color: #aaaaaa; font-size: 14px; }
-        .map-section { margin-bottom: 40px; }
-        .section-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; color: #ffffff; }
-        .map-container { background: #181818; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.4); }
-        .map-container iframe { width: 100% !important; height: 750px !important; }
-        .location-section { margin-bottom: 40px; }
-        .location-header { display: flex; align-items: center; margin-bottom: 16px; gap: 12px; }
-        .location-title { font-size: 20px; font-weight: 600; color: #ffffff; }
-        .video-count { background: #3d3d3d; color: #aaaaaa; padding: 4px 8px; border-radius: 12px; font-size: 12px; }
+
+        .container { 
+            max-width: 1280px; 
+            margin: 0 auto; 
+            padding: 16px; 
+        }
+
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 12px; 
+            margin-bottom: 24px; 
+        }
+        .stat-card { 
+            background: #181818; 
+            padding: 16px 12px; 
+            border-radius: 12px; 
+            text-align: center; 
+            border: 1px solid #3d3d3d; 
+        }
+        .stat-number { 
+            font-size: 20px; 
+            font-weight: 700; 
+            color: #ffffff; 
+            display: block; 
+            margin-bottom: 4px; 
+        }
+        .stat-label { color: #aaaaaa; font-size: 12px; }
+
+        .map-section { margin-bottom: 32px; }
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: #ffffff; }
+        .map-container { 
+            background: #181818; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 2px 16px rgba(0,0,0,0.4); 
+            height: 400px; 
+        }
+        .map-container iframe { width: 100% !important; height: 100% !important; }
+
+        .location-section { margin-bottom: 32px; }
+        .location-header { display: flex; align-items: center; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+        .location-title { font-size: 18px; font-weight: 600; color: #ffffff; }
+        .video-count { background: #3d3d3d; color: #aaaaaa; padding: 4px 8px; border-radius: 12px; font-size: 11px; }
+
         .sort-controls { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; }
-        .sort-label { color: #aaaaaa; font-size: 14px; }
-        .sort-select { background: #181818; color: #ffffff; border: 1px solid #3d3d3d; border-radius: 8px; padding: 8px 12px; font-size: 14px; cursor: pointer; }
-        .videos-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-        .video-card { background: transparent; cursor: pointer; transition: transform 0.2s ease; display: flex; gap: 12px;}
-        .video-card:hover { transform: translateY(-4px); }
-        .video-thumbnail { position: relative; width: 120px;  height: 68px;  border-radius: 8px; overflow: hidden; background: #181818; flex-shrink: 0; }
-        .video-duration { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: white; padding: 3px 6px; border-radius: 4px; font-size: 12px; }
-        .video-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.2s ease; display: flex; align-items: center; justify-content: center; }
+        .sort-label { color: #aaaaaa; font-size: 13px; }
+        .sort-select { 
+            background: #181818; 
+            color: #ffffff; 
+            border: 1px solid #3d3d3d; 
+            border-radius: 8px; 
+            padding: 8px 12px; 
+            font-size: 13px; 
+            cursor: pointer; 
+        }
+
+        /* 비디오 카드를 모바일에 최적화 */
+        .videos-grid { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 16px; 
+        }
+        .video-card { 
+            background: transparent; 
+            cursor: pointer; 
+            transition: transform 0.2s ease; 
+            display: flex; 
+            gap: 12px; 
+        }
+        .video-card:hover { transform: translateY(-2px); }
+
+        /* 썸네일 크기 줄이기 */
+        .video-thumbnail { 
+            position: relative; 
+            width: 120px; 
+            height: 68px; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            background: #181818; 
+            flex-shrink: 0; 
+        }
+        .video-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+        .video-duration { 
+            position: absolute; 
+            bottom: 4px; 
+            right: 4px; 
+            background: rgba(0,0,0,0.8); 
+            color: white; 
+            padding: 2px 4px; 
+            border-radius: 3px; 
+            font-size: 10px; 
+        }
+        .video-overlay { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0,0,0,0.3); 
+            opacity: 0; 
+            transition: opacity 0.2s ease; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
         .video-card:hover .video-overlay { opacity: 1; }
-        .play-btn { width: 48px; height: 48px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .video-info { padding: 0 4px; }
-        .video-title { font-size: 16px; font-weight: 500; color: #ffffff; margin-bottom: 6px; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-        .video-meta { color: #aaaaaa; font-size: 14px; margin-bottom: 8px; }
-        .video-stats { display: flex; gap: 12px; font-size: 13px; }
+        .play-btn { 
+            width: 24px; 
+            height: 24px; 
+            background: rgba(255,255,255,0.9); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        /* 비디오 정보 가독성 개선 */
+        .video-info { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
+        .video-title { 
+            font-size: 14px; 
+            font-weight: 500; 
+            color: #ffffff; 
+            margin-bottom: 6px; 
+            line-height: 1.3; 
+            overflow: hidden; 
+            display: -webkit-box; 
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical; 
+        }
+        .video-description { 
+            color: #aaaaaa; 
+            font-size: 12px; 
+            margin-bottom: 8px; 
+            line-height: 1.4; 
+            overflow: hidden; 
+            display: -webkit-box; 
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical; 
+        }
+        .video-meta { color: #aaaaaa; font-size: 12px; margin-bottom: 8px; }
+        .video-stats { 
+            display: flex; 
+            gap: 12px; 
+            font-size: 11px; 
+            flex-wrap: wrap; 
+        }
         .video-stat { color: #aaaaaa; }
-        .difficulty-초급 { color: #00ff00; }
-        .difficulty-중급 { color: #ffaa00; }
-        .difficulty-고급 { color: #ff4444; }
-        .video-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .video-description { color: #aaaaaa; font-size: 12px; margin-bottom: 8px; line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .difficulty-초급 { color: #ff6b6b; }
+        .difficulty-중급 { color: #ff4757; }
+        .difficulty-고급 { color: #c44569; }
+
+        /* 태블릿 및 데스크톱 스타일 */
+        @media (min-width: 480px) {
+            .header { padding: 16px 20px; }
+            .channel-avatar { width: 48px; height: 48px; }
+            .channel-details h1 { font-size: 20px; }
+            .channel-meta { font-size: 13px; }
+            .subscribe-btn { padding: 10px 16px; font-size: 14px; }
+            .container { padding: 20px; }
+            .stat-number { font-size: 24px; }
+            .stat-label { font-size: 13px; }
+            .section-title { font-size: 20px; }
+            .map-container { height: 500px; }
+            .videos-grid { grid-template-columns: 1fr; gap: 20px; }
+            .video-thumbnail { width: 160px; height: 90px; }
+            .video-title { font-size: 15px; }
+            .video-description { font-size: 13px; }
+            .video-meta { font-size: 13px; }
+            .video-stats { font-size: 12px; }
+        }
+
         @media (min-width: 768px) {
+            .header { padding: 20px 24px; }
+            .container { padding: 24px; }
+            .stats-grid { gap: 16px; }
+            .stat-card { padding: 20px; }
+            .stat-number { font-size: 28px; }
+            .stat-label { font-size: 14px; }
+            .map-container { height: 600px; }
             .videos-grid { grid-template-columns: repeat(2, 1fr); }
             .video-card { display: block; }
             .video-thumbnail { width: 100%; aspect-ratio: 16/9; height: auto; }
             .video-info { padding: 12px 4px 0 4px; }
+            .video-title { font-size: 16px; }
+            .video-description { font-size: 14px; }
+        }
+
+        @media (min-width: 1024px) {
+            .videos-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+            .map-container { height: 700px; }
+        }
+
+        @media (min-width: 1280px) {
+            .videos-grid { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
@@ -618,19 +801,19 @@ def index():
         </div>
         <button class="subscribe-btn" onclick="subscribeChannel()">구독</button>
     </header>
-    
+
     <div class="container">
         <div class="stats-grid">
             <div class="stat-card"><span class="stat-number">{{ total_locations }}</span><div class="stat-label">수영 지역</div></div>
             <div class="stat-card"><span class="stat-number">{{ total_videos }}</span><div class="stat-label">수영 포인트</div></div>
             <div class="stat-card"><span class="stat-number">{{ "%.1f"|format(avg_rating) }}</span><div class="stat-label">평균 평점</div></div>
         </div>
-        
+
         <section class="map-section">
-            <h2 class="section-title">📍 수영 위치 지도</h2>
+            <h2 class="section-title">🏊 수영 위치 지도</h2>
             <div class="map-container">{{ map_html|safe }}</div>
         </section>
-        
+
         {% for location, data in video_data.items() %}
         <section class="location-section">
             <div class="location-header">
@@ -653,7 +836,7 @@ def index():
                         <div class="video-duration">{{ video.duration }}</div>
                         <div class="video-overlay">
                             <div class="play-btn">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="#181818"><path d="M8 5v14l11-7z"/></svg>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="#181818"><path d="M8 5v14l11-7z"/></svg>
                             </div>
                         </div>
                     </div>
@@ -662,7 +845,7 @@ def index():
                         <div class="video-description">{{ video.get('description', '') }}</div>
                         <div class="video-meta">조회수 {{ video.views }}회 • {{ video.date }}</div>
                         <div class="video-stats">
-                            <span class="video-stat">📏 {{ video.distance }}</span>
+                            <span class="video-stat">📍 {{ video.distance }}</span>
                             <span class="video-stat difficulty-{{ video.difficulty }}">● {{ video.difficulty }}</span>
                             <span class="video-stat">⭐ {{ video.rating }}</span>
                         </div>
@@ -673,7 +856,7 @@ def index():
         </section>
         {% endfor %}
     </div>
-    
+
     <script>
         function subscribeChannel() {
             const btn = document.querySelector('.subscribe-btn');
@@ -686,7 +869,7 @@ def index():
                 btn.style.background = '#cc0000';
             }
         }
-        
+
         function sortVideos(location, sortType) {
             const container = document.getElementById('videos-' + location);
             const videos = Array.from(container.querySelectorAll('.video-card'));
@@ -698,7 +881,7 @@ def index():
             });
             videos.forEach(video => container.appendChild(video));
         }
-        
+
         function parseViews(viewsStr) {
             const cleanStr = viewsStr.replace(/[,]/g, '');
             if (cleanStr.includes('만')) return parseFloat(cleanStr.replace('만', '')) * 10000;
@@ -709,14 +892,14 @@ def index():
 </body>
 </html>'''
 
-    return render_template_string(html, 
-        map_html=map_html,
-        total_videos=total_videos,
-        total_locations=total_locations,
-        avg_rating=avg_rating,
-        video_data=enriched_video_data,
-        channel_info=channel_info
-    )
+    return render_template_string(html,
+                                  map_html=map_html,
+                                  total_videos=total_videos,
+                                  total_locations=total_locations,
+                                  avg_rating=avg_rating,
+                                  video_data=enriched_video_data,
+                                  channel_info=channel_info
+                                  )
 
 # 앱 실행 부분 수정
 if __name__ == '__main__':

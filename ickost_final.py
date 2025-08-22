@@ -138,14 +138,14 @@ def get_channel_info():
     except Exception as e:
         print(f"채널 정보 오류: {e}")
     
-    return {
+     return {
         'subscriberCount': '00만',
         'videoCount': '00',
         'title': 'ICKOST',
         'thumbnail': 'https://yt3.googleusercontent.com/2pvoyX_JUZFcrn1RD1I9SCIUF62jvpkxaK77UNs50TtM8GkjyprLPu5cIPcmE9ribNOGqL9kRA=s160-c-k-c0x00ffffff-no-rj'
     }
-    
-    def get_difficulty_color(difficulty):
+
+def get_difficulty_color(difficulty):  
     """난이도별 색상 반환 (빨간색 계열)"""
     colors = {
         "초급": "#ff6b6b",
@@ -154,11 +154,11 @@ def get_channel_info():
     }
     return colors.get(difficulty, "#ff0000")
 
-    def get_marker_size(rating):
+def get_marker_size(rating):
     """평점별 마커 크기 반환"""
-    if rating >= 4.5:
+    if rating >= 4.0:
         return 40
-    elif rating >= 4.0:
+    elif rating >= 3.5:
         return 35
     else:
         return 30
@@ -424,9 +424,8 @@ def enrich_video_data():
     return enriched_data
 
 def get_difficulty_color(difficulty):
-    """난이도별 색상 반환"""
     colors = {
-        "초급": "#00ff00",
+        "초급": "#00ff00",  # 초록색
         "중급": "#ffaa00", 
         "고급": "#ff4444"
     }
@@ -506,18 +505,18 @@ def create_map(video_data):
             </div>
             """
             
-           marker_size = get_marker_size(video['rating'])
-           difficulty_color = get_difficulty_color(video['difficulty'])
+marker_size = get_marker_size(video['rating'])  # 올바른 들여쓰기
+            difficulty_color = get_difficulty_color(video['difficulty'])
 
-           marker_html = f'''
-           <div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
-            border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
-            justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;">
-    <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">
-        <path d="M8 5v14l11-7z"/>
-    </svg>
-</div>
-'''
+            marker_html = f'''  # 올바른 들여쓰기
+            <div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
+                        border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
+                        justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;">
+                <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </div>
+            '''
             
             folium.Marker(
     location=video['coordinates'],

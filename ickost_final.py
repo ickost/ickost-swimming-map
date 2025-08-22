@@ -415,7 +415,7 @@ def enrich_video_data():
                 'duration': youtube_info['duration'],
                 'views': youtube_info['viewCount'],
                 'date': youtube_info['publishedAt'],
-                'title': video['title'] if video['title'] else youtube_info['title']
+                'title': video['title']
             }
             enriched_videos.append(enriched_video)
         enriched_data[location] = {'videos': enriched_videos}

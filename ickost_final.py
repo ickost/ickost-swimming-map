@@ -562,11 +562,10 @@ def index():
         .sort-controls { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; }
         .sort-label { color: #aaaaaa; font-size: 14px; }
         .sort-select { background: #181818; color: #ffffff; border: 1px solid #3d3d3d; border-radius: 8px; padding: 8px 12px; font-size: 14px; cursor: pointer; }
-        .videos-grid { display: grid; grid-template-columns: 1fr;  /* 모바일에서 1열로 */ gap: 16px; }
-        ..video-card { background: transparent; cursor: pointer; transition: transform 0.2s ease; display: flex;  /* 가로 레이아웃으로 변경 */ gap: 12px;}
+        .videos-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        .video-card { background: transparent; cursor: pointer; transition: transform 0.2s ease; display: flex; gap: 12px;}
         .video-card:hover { transform: translateY(-4px); }
-        .video-thumbnail { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; margin-bottom: 12px; background: #181818; }
-        .video-thumbnail { position: relative; width: 120px;  /* 기존보다 작게 */height: 68px;  /* 기존보다 작게 */border-radius: 8px; overflow: hidden; background: #181818; flex-shrink: 0;  /* 크기 고정 */}
+        .video-thumbnail { position: relative; width: 120px;  height: 68px;  border-radius: 8px; overflow: hidden; background: #181818; flex-shrink: 0; }
         .video-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .video-description { color: #aaaaaa; font-size: 12px; margin-bottom: 8px; line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         .video-duration { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: white; padding: 3px 6px; border-radius: 4px; font-size: 12px; }
@@ -583,7 +582,7 @@ def index():
         .difficulty-고급 { color: #ff4444; }
         @media (min-width: 768px) {
         .videos-grid { grid-template-columns: repeat(2, 1fr); }
-        .video-card { display: block; }  /* 세로 레이아웃으로 복원 */
+        .video-card { display: block; } 
         .video-thumbnail { width: 100%; aspect-ratio: 16/9; height: auto; }
         .video-info { padding: 12px 4px 0 4px; }
          }

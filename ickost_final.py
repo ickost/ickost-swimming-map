@@ -146,11 +146,11 @@ def get_channel_info():
 def get_difficulty_color(difficulty):  
     """난이도별 색상 반환 (빨간색 계열)"""
     colors = {
-        "초급": "#ff6b6b",
-        "중급": "#ff4757",
-        "고급": "#c44569"
+        "초급": "#00ff00",  # 초록색
+        "중급": "#ffaa00", 
+        "고급": "#ff4444"
     }
-    return colors.get(difficulty, "#ff0000")
+    return colors.get(difficulty, "#aaaaaa")
 
 def get_marker_size(rating):
     """평점별 마커 크기 반환"""

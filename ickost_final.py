@@ -548,7 +548,7 @@ def index():
         total_locations = 3
         avg_rating = 4.5
 
-    html = '''<!DOCTYPE html>
+html = '''<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">

@@ -137,8 +137,8 @@ def get_channel_info():
     
     # 기본값 반환 (try 블록 밖에서)
     return {
-        'subscriberCount': '00만',
-        'videoCount': '00',
+        'subscriberCount': subscriber_display,
+        'videoCount': video_count,
         'title': 'ICKOST',
         'thumbnail': 'https://yt3.googleusercontent.com/2pvoyX_JUZFcrn1RD1I9SCIUF62jvpkxaK77UNs50TtM8GkjyprLPu5cIPcmE9ribNOGqL9kRA=s160-c-k-c0x00ffffff-no-rj'
     }

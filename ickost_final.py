@@ -585,8 +585,6 @@ def index():
         .video-card { background: transparent; cursor: pointer; transition: transform 0.2s ease; display: flex; gap: 12px;}
         .video-card:hover { transform: translateY(-4px); }
         .video-thumbnail { position: relative; width: 120px;  height: 68px;  border-radius: 8px; overflow: hidden; background: #181818; flex-shrink: 0; }
-        .video-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .video-description { color: #aaaaaa; font-size: 12px; margin-bottom: 8px; line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         .video-duration { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: white; padding: 3px 6px; border-radius: 4px; font-size: 12px; }
         .video-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.2s ease; display: flex; align-items: center; justify-content: center; }
         .video-card:hover .video-overlay { opacity: 1; }
@@ -599,12 +597,14 @@ def index():
         .difficulty-초급 { color: #00ff00; }
         .difficulty-중급 { color: #ffaa00; }
         .difficulty-고급 { color: #ff4444; }
+        .video-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .video-description { color: #aaaaaa; font-size: 12px; margin-bottom: 8px; line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         @media (min-width: 768px) {
-        .videos-grid { grid-template-columns: repeat(2, 1fr); }
-        .video-card { display: block; } 
-        .video-thumbnail { width: 100%; aspect-ratio: 16/9; height: auto; }
-        .video-info { padding: 12px 4px 0 4px; }
-         }
+            .videos-grid { grid-template-columns: repeat(2, 1fr); }
+            .video-card { display: block; }
+            .video-thumbnail { width: 100%; aspect-ratio: 16/9; height: auto; }
+            .video-info { padding: 12px 4px 0 4px; }
+        }
     </style>
 </head>
 <body>

@@ -153,7 +153,7 @@ def get_channel_info():
     }
     return colors.get(difficulty, "#ff0000")
 
-def get_marker_size(rating):
+    def get_marker_size(rating):
     """평점별 마커 크기 반환"""
     if rating >= 4.5:
         return 40

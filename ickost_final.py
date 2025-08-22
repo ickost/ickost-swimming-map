@@ -892,14 +892,14 @@ html = '''<!DOCTYPE html>
 </body>
 </html>'''
 
-    return render_template_string(html,
-                                  map_html=map_html,
-                                  total_videos=total_videos,
-                                  total_locations=total_locations,
-                                  avg_rating=avg_rating,
-                                  video_data=enriched_video_data,
-                                  channel_info=channel_info
-                                  )
+    return render_template_string(html, 
+        map_html=map_html,
+        total_videos=total_videos,
+        total_locations=total_locations,
+        avg_rating=avg_rating,
+        video_data=enriched_video_data,
+        channel_info=channel_info
+    )
 
 # 앱 실행 부분 수정
 if __name__ == '__main__':

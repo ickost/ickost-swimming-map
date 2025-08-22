@@ -155,11 +155,11 @@ def get_difficulty_color(difficulty):
 def get_marker_size(rating):
     """평점별 마커 크기 반환"""
     if rating >= 4.0:
-        return 40
+        return 45
     elif rating >= 3.5:
-        return 35
-    else:
         return 30
+    else:
+        return 15
         
 VIDEO_DATA = {
     "제주도": {
@@ -741,9 +741,9 @@ def index():
             flex-wrap: wrap; 
         }
         .video-stat { color: #aaaaaa; }
-        .difficulty-초급 { color: #ff6b6b; }
-        .difficulty-중급 { color: #ff4757; }
-        .difficulty-고급 { color: #c44569; }
+        .difficulty-초급 { color: #00ff00; }
+        .difficulty-중급 { color: #ffaa00; }
+        .difficulty-고급 { color: #ff4444; }
 
         /* 태블릿 및 데스크톱 스타일 */
         @media (min-width: 480px) {

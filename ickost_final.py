@@ -87,6 +87,7 @@ def get_youtube_video_info(video_url):
                 'title': snippet.get('title'),
                 'description': snippet.get('description', '')[:100] + '...' if len(snippet.get('description', '')) > 100 else snippet.get('description', '')
             }
+            
     except Exception as e:
         print(f"YouTube API 오류: {e}")
     
@@ -414,7 +415,7 @@ def enrich_video_data():
                 'duration': youtube_info['duration'],
                 'views': youtube_info['viewCount'],
                 'date': youtube_info['publishedAt'],
-                'title': youtube_info['title'] if youtube_info['title'] else video['title']
+                'title': video['title'] if video['title'] else youtube_info['title']
             }
             enriched_videos.append(enriched_video)
         enriched_data[location] = {'videos': enriched_videos}

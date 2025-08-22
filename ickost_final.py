@@ -149,7 +149,7 @@ def get_channel_info():
     colors = {
         "초급": "#fe7575",    # 밝은 빨강
         "중급": "#fc2f2f",    # 중간 빨강
-        "고급": "#e90101"     # 진한 빨강
+        "고급": "#ff0634"     # 진한 빨강
     }
     return colors.get(difficulty, "#ff0000")
 

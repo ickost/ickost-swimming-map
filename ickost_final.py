@@ -791,13 +791,12 @@ def create_map(spot_data):
     
     for location, data in spot_data.items():
         for spot in data['spots']:
-            popup_html = f"""
-            <div style="width: 320px; font-family: 'Roboto', sans-serif; 
-                        background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
-                <div style="position: relative; background: #000; cursor: pointer;" 
-                     onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">
-                    <img src="{spot['thumbnail']}"
-                         style="width: 100%; height: 180px; object-fit: cover; display: block;">
+           popup_html = f"""
+           <div style="width: 280px; font-family: 'Roboto', sans-serif; 
+                      background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
+               <div style="position: relative; background: #000;">
+                   <img src="{spot['thumbnail']}"
+                       style="width: 100%; height: 140px; object-fit: cover; display: block;">
                     <div style="position: absolute; bottom: 8px; right: 8px; 
                                 background: rgba(0,0,0,0.8); color: white; 
                                 padding: 2px 6px; border-radius: 3px; font-size: 12px;">
@@ -867,7 +866,7 @@ def create_map(spot_data):
           
             folium.Marker(
                 location=spot['coordinates'],
-                popup=folium.Popup(popup_html, max_width=350),
+                popup=folium.Popup(popup_html, max_width=250),
                 tooltip=f"📍 {spot['title']} ({location}) - {spot['video_count']}개 영상",
                 icon=folium.DivIcon(html=marker_html, icon_size=(marker_size, marker_size), icon_anchor=(marker_size//2, marker_size//2))
             ).add_to(m)

@@ -796,13 +796,13 @@ def create_map(spot_data):
                         background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
                 <div style="position: relative; background: #000;">
                     <img src="{spot['thumbnail']}"
-                         style="width: 100%; height: 100px; object-fit: cover; display: block;">
-                    <div style="position: absolute; bottom: 4px; right: 4px; 
+                         style="width: 100%; height: 140px; object-fit: cover; display: block;">
+                    <div style="position: absolute; bottom: 8px; right: 8px; 
                                 background: rgba(0,0,0,0.8); color: white; 
                                 padding: 2px 6px; border-radius: 3px; font-size: 12px;">
                         {spot['duration']}
                     </div>
-                    <div style="position: absolute; top: 4px; left: 4px; 
+                    <div style="position: absolute; top: 8px; left: 8px; 
                                 background: rgba(255,0,0,0.9); color: white; 
                                 padding: 2px 6px; border-radius: 3px; font-size: 11px;">
                         {spot['video_count']}개 영상
@@ -855,7 +855,7 @@ def create_map(spot_data):
            # 마커에 JavaScript 클릭 이벤트 추가
             marker_html = f'''
             <div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
-                    border: 1px solid #ffffff; border-radius: 20%; display: flex; align-items: center; 
+                    border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
                     justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;"
                 onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">
                <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">
@@ -866,7 +866,7 @@ def create_map(spot_data):
           
             folium.Marker(
                 location=spot['coordinates'],
-                popup=folium.Popup(popup_html, max_width=250),
+                popup=folium.Popup(popup_html, max_width=350),
                 tooltip=f"📍 {spot['title']} ({location}) - {spot['video_count']}개 영상",
                 icon=folium.DivIcon(html=marker_html, icon_size=(marker_size, marker_size), icon_anchor=(marker_size//2, marker_size//2))
             ).add_to(m)

@@ -852,7 +852,7 @@ def create_map(spot_data):
             marker_size = get_marker_size(spot['rating'])
             difficulty_color = get_difficulty_color(spot['difficulty'])
             
-           # 마커에 JavaScript 클릭 이벤트 추가
+            # 마커에 JavaScript 클릭 이벤트 추가
             marker_html = f'''
             <div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
                         border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 

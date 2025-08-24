@@ -863,8 +863,7 @@ def create_map(spot_data):
                 </svg>
             </div>
             '''
-            marker_html = f'''
-           
+          
             folium.Marker(
                 location=spot['coordinates'],
                 popup=folium.Popup(popup_html, max_width=350),

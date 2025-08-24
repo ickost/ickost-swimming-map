@@ -791,12 +791,12 @@ def create_map(spot_data):
     
     for location, data in spot_data.items():
         for spot in data['spots']:
-           popup_html = f"""
-           <div style="width: 280px; font-family: 'Roboto', sans-serif; 
-                      background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
-               <div style="position: relative; background: #000;">
-                   <img src="{spot['thumbnail']}"
-                       style="width: 100%; height: 140px; object-fit: cover; display: block;">
+            popup_html = f"""
+            <div style="width: 280px; font-family: 'Roboto', sans-serif; 
+                        background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
+                <div style="position: relative; background: #000;">
+                    <img src="{spot['thumbnail']}"
+                         style="width: 100%; height: 140px; object-fit: cover; display: block;">
                     <div style="position: absolute; bottom: 8px; right: 8px; 
                                 background: rgba(0,0,0,0.8); color: white; 
                                 padding: 2px 6px; border-radius: 3px; font-size: 12px;">
@@ -852,15 +852,15 @@ def create_map(spot_data):
             marker_size = get_marker_size(spot['rating'])
             difficulty_color = get_difficulty_color(spot['difficulty'])
             
-            # 마커에 JavaScript 클릭 이벤트 추가
+           # 마커에 JavaScript 클릭 이벤트 추가
             marker_html = f'''
             <div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
-                        border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
-                        justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;"
-                        onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">
-                <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">
+                    border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
+                    justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;"
+                onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">
+               <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">
                     <path d="M8 5v14l11-7z"/>
-                </svg>
+               </svg>
             </div>
             '''
           

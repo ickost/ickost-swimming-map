@@ -207,7 +207,7 @@ SPOT_DATA = {
                         "description": "제주도 바다수영 입문자를 위한 완벽한 장소"
                     },
                     {
-                        "url": "https://youtu.be/7VMPyljXGv0?si=MJ1366Go-KGWNjyo",
+                        "url": "https://youtu.be/7VMPyljXGv0",
                         "title": "삼양감수탕 첫 방문",
                         "description": "제주도 바다수영 입문자를 위한 완벽한 장소"
                     },
@@ -237,7 +237,7 @@ SPOT_DATA = {
                         "description": "제주도 바다수영 입문자를 위한 완벽한 장소"
                     },
                     {
-                        "url": "https://youtu.be/b1SoJSyZMBw?si=9fgPNqOx6mcF0QBq",
+                        "url": "https://youtu.be/u4A8krlsPNI",
                         "title": "삼양감수탕 첫 방문",
                         "description": "제주도 바다수영 입문자를 위한 완벽한 장소"
                     },
@@ -581,7 +581,7 @@ SPOT_DATA = {
                 "difficulty": "중급",
                 "videos": [
                     {
-                        "url": "https://youtu.be/46QuKrDwbwo4",
+                        "url": "https://youtu.be/46QuKrDwbwo",
                         "title": "토끼섬 수영",
                         "description": "토끼섬엔 토끼가 없다는 이야기"
                     }

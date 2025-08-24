@@ -207,7 +207,7 @@ SPOT_DATA = {
                         "description": "제주도 바다수영 입문자를 위한 완벽한 장소"
                     },
                     {
-                        "url": "https://youtu.be/7VMPyljXGv0",
+                        "url": "https://youtu.be/s29__btHJ-U",
                         "title": "삼양감수탕 첫 방문",
                         "description": "제주도 바다수영 입문자를 위한 완벽한 장소"
                     },
@@ -866,7 +866,7 @@ def create_map(spot_data):
           
             folium.Marker(
                 location=spot['coordinates'],
-                popup=folium.Popup(popup_html, max_width=350),
+                popup=folium.Popup(popup_html, max_width=250),
                 tooltip=f"📍 {spot['title']} ({location}) - {spot['video_count']}개 영상",
                 icon=folium.DivIcon(html=marker_html, icon_size=(marker_size, marker_size), icon_anchor=(marker_size//2, marker_size//2))
             ).add_to(m)

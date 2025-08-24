@@ -857,10 +857,10 @@ def create_map(spot_data):
             <div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
                     border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
                     justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;"
-                onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">
-               <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">
+                    onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">
+                <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">
                     <path d="M8 5v14l11-7z"/>
-               </svg>
+                </svg>
             </div>
             '''
           

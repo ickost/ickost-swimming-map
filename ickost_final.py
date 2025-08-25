@@ -858,8 +858,30 @@ def create_map(spot_data):
                     <h3 style="margin: 0 0 6px 0; font-size: 14px; color: #ffffff;">
                         {spot['title']}
                     </h3>
-                    <div style="color: #aaaaaa; font-size: 11px; margin-bottom: 8px;">
-                        {spot['distance']} • {spot['difficulty']} • ★{spot['rating']}
+                    <div style="padding: 12px;">
+                    <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #ffffff;">
+                        {spot['title']}
+                    </h3>
+                    <div style="color: #aaaaaa; font-size: 13px; margin-bottom: 12px;">
+                        조회수 {spot['views']}회 • {spot['date']}
+                    </div>
+                    <div style="color: #aaaaaa; font-size: 13px; margin-bottom: 12px;">
+                        {spot['description']}
+                    </div>
+                    <div style="display: flex; gap: 16px; margin: 12px 0; padding: 8px 0; 
+                                border-top: 1px solid #3d3d3d;">
+                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
+                            <div style="color: #ffffff; font-weight: 500;">{spot['distance']}</div>
+                            <div>거리</div>
+                        </div>
+                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
+                            <div style="color: {get_difficulty_color(spot['difficulty'])}; font-weight: 500;">{spot['difficulty']}</div>
+                            <div>난이도</div>
+                        </div>
+                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
+                            <div style="color: #ffaa00; font-weight: 500;">★{spot['rating']}</div>
+                            <div>평점</div>
+                        </div>
                     </div>
                     <button style="width: 100%; padding: 8px; background: #cc0000; 
                                    color: white; border: none; border-radius: 4px; 

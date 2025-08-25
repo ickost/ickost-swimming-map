@@ -791,6 +791,7 @@ def create_map(spot_data):
     
     for location, data in spot_data.items():
         for spot in data['spots']:
+            '''
             popup_html = f"""
             <div style="width: 280px; font-family: 'Roboto', sans-serif; 
                         background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
@@ -845,6 +846,27 @@ def create_map(spot_data):
                             📍 장소 상세보기
                         </button>
                     </div>
+                </div>
+            </div>
+            """
+            '''
+            # 모바일에서는 더 작은 팝업 사용
+            popup_html = f"""
+            <div style="width: 240px; font-family: 'Roboto', sans-serif; 
+                        background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
+                <div style="padding: 12px;">
+                    <h3 style="margin: 0 0 6px 0; font-size: 14px; color: #ffffff;">
+                        {spot['title']}
+                    </h3>
+                    <div style="color: #aaaaaa; font-size: 11px; margin-bottom: 8px;">
+                        {spot['distance']} • {spot['difficulty']} • ★{spot['rating']}
+                    </div>
+                    <button style="width: 100%; padding: 8px; background: #cc0000; 
+                                   color: white; border: none; border-radius: 4px; 
+                                   font-size: 12px; cursor: pointer;"
+                            onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">
+                        상세보기
+                    </button>
                 </div>
             </div>
             """

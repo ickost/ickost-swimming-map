@@ -791,65 +791,7 @@ def create_map(spot_data):
     
     for location, data in spot_data.items():
         for spot in data['spots']:
-            '''
-            popup_html = f"""
-            <div style="width: 280px; font-family: 'Roboto', sans-serif; 
-                        background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
-                <div style="position: relative; background: #000;">
-                    <img src="{spot['thumbnail']}"
-                         style="width: 100%; height: 140px; object-fit: cover; display: block;">
-                    <div style="position: absolute; bottom: 8px; right: 8px; 
-                                background: rgba(0,0,0,0.8); color: white; 
-                                padding: 2px 6px; border-radius: 3px; font-size: 12px;">
-                        {spot['duration']}
-                    </div>
-                    <div style="position: absolute; top: 8px; left: 8px; 
-                                background: rgba(255,0,0,0.9); color: white; 
-                                padding: 2px 6px; border-radius: 3px; font-size: 11px;">
-                        {spot['video_count']}개 영상
-                    </div>
-                </div>
-                <div style="padding: 12px;">
-                    <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #ffffff;">
-                        {spot['title']}
-                    </h3>
-                    <div style="color: #aaaaaa; font-size: 13px; margin-bottom: 12px;">
-                        조회수 {spot['views']}회 • {spot['date']}
-                    </div>
-                    <div style="color: #aaaaaa; font-size: 13px; margin-bottom: 12px;">
-                        {spot['description']}
-                    </div>
-                    <div style="display: flex; gap: 16px; margin: 12px 0; padding: 8px 0; 
-                                border-top: 1px solid #3d3d3d;">
-                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
-                            <div style="color: #ffffff; font-weight: 500;">{spot['distance']}</div>
-                            <div>거리</div>
-                        </div>
-                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
-                            <div style="color: {get_difficulty_color(spot['difficulty'])}; font-weight: 500;">{spot['difficulty']}</div>
-                            <div>난이도</div>
-                        </div>
-                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
-                            <div style="color: #ffaa00; font-weight: 500;">★{spot['rating']}</div>
-                            <div>평점</div>
-                        </div>
-                    </div>
-                    <div style="margin-top: 12px;">
-                        <button style="width: 100%; padding: 10px; 
-                                       background: #cc0000; color: white; 
-                                       border: none; border-radius: 6px; 
-                                       font-size: 14px; font-weight: 500; 
-                                       cursor: pointer; transition: background 0.2s ease;"
-                                onmouseover="this.style.background='#aa0000'"
-                                onmouseout="this.style.background='#cc0000'"
-                                onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">
-                            📍 장소 상세보기
-                        </button>
-                    </div>
-                </div>
-            </div>
-            """
-            '''
+           
             # 모바일에서는 더 작은 팝업 사용
             popup_html = f"""
             <div style="width: 240px; font-family: 'Roboto', sans-serif; 
@@ -864,7 +806,7 @@ def create_map(spot_data):
                     <div style="color: #aaaaaa; font-size: 13px; margin-bottom: 12px;">
                         {spot['description']}
                     </div>
-                    <div style="display: flex; gap: 16px; margin: 12px 0; padding: 8px 0; 
+                    <div style="display: flex; gap: 16px; margin: 0; padding: 0; 
                                 border-top: 1px solid #3d3d3d;">
                         <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
                             <div style="color: #ffffff; font-weight: 500;">{spot['distance']}</div>
@@ -881,7 +823,7 @@ def create_map(spot_data):
                     </div>
                     <button style="width: 100%; padding: 8px; background: #cc0000; 
                                    color: white; border: none; border-radius: 4px; 
-                                   font-size: 12px; cursor: pointer;"
+                                   font-size: 12px; cursor: pointer; margin: 0;"
                             onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">
                         상세보기
                     </button>

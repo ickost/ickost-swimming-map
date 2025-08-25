@@ -853,13 +853,9 @@ def create_map(spot_data):
             # 모바일에서는 더 작은 팝업 사용
             popup_html = f"""
             <div style="width: 240px; font-family: 'Roboto', sans-serif; 
-                        background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden;">
+                        background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden; margin: 0; padding: 0;"">
                 <div style="padding: 12px;">
                     <h3 style="margin: 0 0 6px 0; font-size: 14px; color: #ffffff;">
-                        {spot['title']}
-                    </h3>
-                    <div style="padding: 12px;">
-                    <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #ffffff;">
                         {spot['title']}
                     </h3>
                     <div style="color: #aaaaaa; font-size: 13px; margin-bottom: 12px;">

@@ -9,13 +9,14 @@ import requests
 from datetime import datetime
 import os
 from urllib.parse import quote
+import math
 
 app = Flask(__name__)
-
 
 # API 키를 환경변수로 변경
 YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
 CHANNEL_ID = os.getenv('CHANNEL_ID', 'UC82OkWXaNdFQb10wm-OY2YA')
+
 
 def extract_video_id(url):
     patterns = [
@@ -27,6 +28,7 @@ def extract_video_id(url):
         if match:
             return match.group(1)
     return None
+
 
 def format_duration(duration):
     match = re.match(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', duration)
@@ -40,14 +42,16 @@ def format_duration(duration):
     else:
         return f"{minutes}:{seconds:02d}"
 
+
 def format_view_count(count):
     count = int(count)
     if count >= 10000:
-        return f"{count/10000:.1f}만"
+        return f"{count / 10000:.1f}만"
     elif count >= 1000:
-        return f"{count/1000:.1f}천"
+        return f"{count / 1000:.1f}천"
     else:
         return str(count)
+
 
 def format_date(date_str):
     try:
@@ -55,6 +59,7 @@ def format_date(date_str):
         return date_obj.strftime('%Y년 %m월 %d일')
     except:
         return date_str
+
 
 def parse_view_count(view_str):
     """조회수 문자열을 숫자로 변환"""
@@ -68,6 +73,43 @@ def parse_view_count(view_str):
     return int(view_str) if view_str.isdigit() else 0
 
 
+def calculate_distance(lat1, lon1, lat2, lon2):
+    """두 좌표 간의 거리를 계산 (하버사인 공식)"""
+    R = 6371  # 지구 반지름 (km)
+
+    lat1_rad = math.radians(lat1)
+    lon1_rad = math.radians(lon1)
+    lat2_rad = math.radians(lat2)
+    lon2_rad = math.radians(lon2)
+
+    dlat = lat2_rad - lat1_rad
+    dlon = lon2_rad - lon1_rad
+
+    a = math.sin(dlat / 2) ** 2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(dlon / 2) ** 2
+    c = 2 * math.asin(math.sqrt(a))
+
+    return R * c
+
+
+def calculate_route_stats(route_points):
+    """경로의 총 거리와 예상 소요시간 계산"""
+    if len(route_points) < 2:
+        return 0, 0
+
+    total_distance = 0
+    for i in range(len(route_points) - 1):
+        lat1, lon1 = route_points[i]
+        lat2, lon2 = route_points[i + 1]
+        total_distance += calculate_distance(lat1, lon1, lat2, lon2)
+
+    # 평균 수영 속도를 2 km/h로 가정하여 소요시간 계산
+    swimming_speed_kmh = 2.0
+    estimated_time_hours = total_distance / swimming_speed_kmh
+    estimated_time_minutes = int(estimated_time_hours * 60)
+
+    return total_distance, estimated_time_minutes
+
+
 def get_youtube_video_info(video_url):
     video_id = extract_video_id(video_url)
     print(f"Video ID: {video_id}")
@@ -76,9 +118,14 @@ def get_youtube_video_info(video_url):
     if not video_id or not YOUTUBE_API_KEY:
         print("API 키가 없거나 video_id가 없음")
         return {
-            # ... 기본값
+            'duration': '8:45',
+            'viewCount': '2.1만',
+            'publishedAt': '2024년 8월 21일',
+            'title': None,
+            'description': '',
+            'viewCountNum': 21000
         }
-    
+
     try:
         url = f"https://www.googleapis.com/youtube/v3/videos"
         params = {
@@ -88,27 +135,28 @@ def get_youtube_video_info(video_url):
         }
         response = requests.get(url, params=params, timeout=10)
         data = response.json()
-        
+
         if 'items' in data and len(data['items']) > 0:
             item = data['items'][0]
             snippet = item.get('snippet', {})
             content_details = item.get('contentDetails', {})
             statistics = item.get('statistics', {})
-            
+
             view_count = statistics.get('viewCount', '0')
             formatted_views = format_view_count(int(view_count))
-            
+
             return {
                 'duration': format_duration(content_details.get('duration', 'PT0S')),
                 'viewCount': formatted_views,
                 'publishedAt': format_date(snippet.get('publishedAt', '')),
                 'title': snippet.get('title'),
-                'description': snippet.get('description', '')[:100] + '...' if len(snippet.get('description', '')) > 100 else snippet.get('description', ''),
+                'description': snippet.get('description', '')[:100] + '...' if len(
+                    snippet.get('description', '')) > 100 else snippet.get('description', ''),
                 'viewCountNum': int(view_count)
             }
     except Exception as e:
         print(f"YouTube API 오류: {e}")
-    
+
     return {
         'duration': '8:45',
         'viewCount': '2.1만',
@@ -117,6 +165,7 @@ def get_youtube_video_info(video_url):
         'description': '',
         'viewCountNum': 21000
     }
+
 
 def get_channel_info():
     try:
@@ -128,28 +177,28 @@ def get_channel_info():
         }
         response = requests.get(url, params=params, timeout=10)
         data = response.json()
-        
+
         if 'items' in data and len(data['items']) > 0:
             item = data['items'][0]
             snippet = item.get('snippet', {})
             statistics = item.get('statistics', {})
-            
+
             subscriber_count = statistics.get('subscriberCount', '0')
             video_count = statistics.get('videoCount', '0')
-            
+
             if subscriber_count == '0' or not subscriber_count:
                 subscriber_display = '구독자 수 비공개'
             else:
                 subscriber_display = format_view_count(int(subscriber_count))
-            
+
             thumbnails = snippet.get('thumbnails', {})
             thumbnail_url = (
-                thumbnails.get('high', {}).get('url') or
-                thumbnails.get('medium', {}).get('url') or 
-                thumbnails.get('default', {}).get('url') or
-                'https://yt3.googleusercontent.com/ytc/AIdro_kKZQj_1yJSZS-8l3v1kS_CXQwc8XggO4ybfQ=s176-c-k-c0x00ffffff-no-rj'
+                    thumbnails.get('high', {}).get('url') or
+                    thumbnails.get('medium', {}).get('url') or
+                    thumbnails.get('default', {}).get('url') or
+                    'https://yt3.googleusercontent.com/ytc/AIdro_kKZQj_1yJSZS-8l3v1kS_CXQwc8XggO4ybfQ=s176-c-k-c0x00ffffff-no-rj'
             )
-            
+
             return {
                 'subscriberCount': subscriber_display,
                 'videoCount': video_count,
@@ -158,7 +207,7 @@ def get_channel_info():
             }
     except Exception as e:
         print(f"채널 정보 오류: {e}")
-    
+
     return {
         'subscriberCount': '5.2만',
         'videoCount': '127',
@@ -166,25 +215,23 @@ def get_channel_info():
         'thumbnail': 'https://yt3.googleusercontent.com/2pvoyX_JUZFcrn1RD1I9SCIUF62jvpkxaK77UNs50TtM8GkjyprLPu5cIPcmE9ribNOGqL9kRA=s160-c-k-c0x00ffffff-no-rj'
     }
 
-def get_difficulty_color(difficulty):  
-    """난이도별 색상 반환 (빨간색 계열)"""
+
+def get_difficulty_color(difficulty):
+    """난이도별 색상 반환"""
     colors = {
         "초급": "#00ff00",  # 초록색
-        "중급": "#ffaa00",
-        "고급": "#ff4444"
+        "중급": "#ffaa00",  # 주황색
+        "고급": "#ff4444"  # 빨간색
     }
     return colors.get(difficulty, "#aaaaaa")
 
-def get_marker_size(rating):
-    """평점별 마커 크기 반환"""
-    if rating >= 4.0:
-        return 40
-    elif rating >= 3.5:
-        return 35
-    else:
-        return 30
 
-# 새로운 데이터 구조: 장소 중심으로 변경
+def get_marker_size(rating):
+    """통일된 마커 크기 반환"""
+    return 30  # 모든 마커 동일 크기
+
+
+# 새로운 데이터 구조: 경로 정보 포함
 SPOT_DATA = {
     "제주도": {
         "spots": {
@@ -195,6 +242,15 @@ SPOT_DATA = {
                 "distance": "1.9km",
                 "rating": 4.1,
                 "difficulty": "초급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.525243, 126.583098], "type": "start"},
+                        {"name": "반환지점", "coords": [33.531882, 126.587633], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.529856, 126.584074], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.525243, 126.583098], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/CQ8i9V3n_3U?si=3uqkoRLkfGCWE06a",
@@ -285,10 +341,12 @@ SPOT_DATA = {
                         "url": "https://youtu.be/s5edMpRVxSc?si=ETiyUA7OLlYw-Bw3",
                         "title": "삼양감수탕 첫 방문",
                         "description": "제주도 바다수영 입문자를 위한 완벽한 장소"
+                    },
+{
+                        "url": "https://youtu.be/htnMQwzmdaQ",
+                        "title": "삼양감수탕 첫 방문",
+                        "description": "제주도 바다수영 입문자를 위한 완벽한 장소"
                     }
-
-
-
                 ]
             },
             "용담포구": {
@@ -298,13 +356,22 @@ SPOT_DATA = {
                 "distance": "2km",
                 "rating": 3.6,
                 "difficulty": "초급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.518360, 126.501244], "type": "start"},
+                        {"name": "반환지점(용두암)", "coords": [33.516918, 126.511891], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.518911, 126.507002], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.518360, 126.501244], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/vrMIBOMAE6Y?si=q7_W4aUSJTpHRmip",
                         "title": "용담포구 수영",
                         "description": "용두암을 배경으로 한 시티뷰 수영"
                     },
-{
+                    {
                         "url": "https://youtu.be/dtbjk7aZNeQ",
                         "title": "용담포구 수영",
                         "description": "용두암을 배경으로 한 시티뷰 수영"
@@ -318,6 +385,15 @@ SPOT_DATA = {
                 "distance": "500m",
                 "rating": 3.5,
                 "difficulty": "초급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.498385, 126.449710], "type": "start"},
+                        {"name": "반환지점", "coords": [33.499037, 126.444161], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.499170, 126.447727], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.498385, 126.449710], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/ZlPalFpXqxc",
@@ -343,13 +419,23 @@ SPOT_DATA = {
                 "distance": "2.8km",
                 "rating": 4.1,
                 "difficulty": "중급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.483416, 126.376398], "type": "start"},
+                        {"name": "경유지점", "coords": [33.481277, 126.366813], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.481227, 126.356951], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.478025, 126.351974], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.474076, 126.351352], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/DwlhJyBMp4U",
                         "title": "구엄포구 장거리 수영",
                         "description": "물고기들과 함께하는 2.8km 바다수영"
                     },
-{
+                    {
                         "url": "https://youtu.be/jHV5KQXooC0",
                         "title": "구엄포구 장거리 수영",
                         "description": "물고기들과 함께하는 2.8km 바다수영"
@@ -363,6 +449,17 @@ SPOT_DATA = {
                 "distance": "3km",
                 "rating": 3.7,
                 "difficulty": "중급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.449486, 126.303061], "type": "start"},
+                        {"name": "경유지점", "coords": [33.451143, 126.301291], "type": "waypoint"},
+                        {"name": "반환지점(한담해변)", "coords": [33.462065, 126.309788], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.457977, 126.307925], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.451143, 126.301291], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.449486, 126.303061], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/H6X039gZHdM?si=u4srpYIX2tR-90GZ",
@@ -409,7 +506,6 @@ SPOT_DATA = {
                         "title": "곽지해수욕장 수영",
                         "description": "제주 서쪽 바다의 아름다운 색깔들"
                     }
-
                 ]
             },
             "비양도": {
@@ -419,6 +515,20 @@ SPOT_DATA = {
                 "distance": "3.8km",
                 "rating": 3.9,
                 "difficulty": "고급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.406378, 126.231167], "type": "start"},
+                        {"name": "경유지점", "coords": [33.409415, 126.232706], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.412748, 126.230078], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.412205, 126.223494], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.409319, 126.221427], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.405112, 126.222116], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.403674, 126.225357], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.403983, 126.227182], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.404611, 126.229465], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/4G6gIcR9PoQ",
@@ -434,6 +544,19 @@ SPOT_DATA = {
                 "distance": "3.2km",
                 "rating": 3.7,
                 "difficulty": "중급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.205401, 126.290239], "type": "start"},
+                        {"name": "경유지점", "coords": [33.203461, 126.293962], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.197824, 126.296642], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.193831, 126.291972], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.196414, 126.285695], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.199959, 126.286154], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.199036, 126.279366], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.199164, 126.276483], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/mW-nnFWoruo",
@@ -445,10 +568,24 @@ SPOT_DATA = {
             "사계항": {
                 "title": "사계항(용머리바위)",
                 "description": "바다에서 바라보는 용머리바위",
-                "coordinates": [33.230389, 126.309630],
+                "coordinates": [33.228517, 126.308868],
                 "distance": "2km",
                 "rating": 4.0,
                 "difficulty": "중급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.228517, 126.308868], "type": "start"},
+                        {"name": "경유지점", "coords": [33.228638, 126.310317], "type": "waypoint"},
+                        {"name": "경유지점(용머리바위)", "coords": [33.231257, 126.315757], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.232651, 126.315415], "type": "waypoint"},
+                        {"name": "반환지점", "coords": [33.232699, 126.314941], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.232651, 126.315415], "type": "waypoint"},
+                        {"name": "경유지점(용머리바위)", "coords": [33.231257, 126.315757], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.228638, 126.310317], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.228517, 126.308868], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/EeCD-p8GdZw",
@@ -464,6 +601,20 @@ SPOT_DATA = {
                 "distance": "3.4km",
                 "rating": 3.8,
                 "difficulty": "중급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.234547, 126.463455], "type": "start"},
+                        {"name": "경유지점", "coords": [33.233911, 126.462275], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.238654, 126.459735], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.239938, 126.457096], "type": "waypoint"},
+                        {"name": "경유지점(진곳내)", "coords": [33.241302, 126.457364], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.239938, 126.457096], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.240250, 126.450465], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.237230, 126.444699], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.238044, 126.443428], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/qDBFv4rKnxQ",
@@ -484,6 +635,20 @@ SPOT_DATA = {
                 "distance": "3.6km",
                 "rating": 3.8,
                 "difficulty": "고급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.239074, 126.558384], "type": "start"},
+                        {"name": "경유지점", "coords": [33.238581, 126.555048], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.240302, 126.550501], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.236936, 126.548264], "type": "waypoint"},
+                        {"name": "경유지점(외돌개)", "coords": [33.237579, 126.545637], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.238458, 126.541817], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.240648, 126.539500], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.238673, 126.534650], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.239589, 126.533535], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/WwQ7GhNW1dQ",
@@ -499,6 +664,20 @@ SPOT_DATA = {
                 "distance": "3.8km",
                 "rating": 3.5,
                 "difficulty": "중급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.243282, 126.568774], "type": "start"},
+                        {"name": "경유지점", "coords": [33.241359, 126.568938], "type": "waypoint"},
+                        {"name": "경유지점(정방폭포)", "coords": [33.243837, 126.572012], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.243126, 126.574402], "type": "waypoint"},
+                        {"name": "경유지점(소정방폭포)", "coords": [33.244319, 126.577634], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.243139, 126.578757], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.242333, 126.581594], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.235546, 126.595469], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.236357, 126.596622], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/lWivFkLGLPA",
@@ -519,6 +698,18 @@ SPOT_DATA = {
                 "distance": "4km",
                 "rating": 3.8,
                 "difficulty": "고급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.270104, 126.691575], "type": "start"},
+                        {"name": "경유지점", "coords": [33.268405, 126.691174], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.270084, 126.701435], "type": "waypoint"},
+                        {"name": "반환지점(로빙화)", "coords": [33.272883, 126.710362], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.269420, 126.702143], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.268405, 126.691174], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.270104, 126.691575], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/HFfRwPig89g",
@@ -530,10 +721,23 @@ SPOT_DATA = {
             "신양섭지해수욕장": {
                 "title": "신양섭지해수욕장(섭지코지)",
                 "description": "섭지코지 한바퀴, 바다거북 출현",
-                "coordinates": [33.436283, 126.924772],
+                "coordinates": [33.435565, 126.924462],
                 "distance": "5km",
                 "rating": 4.2,
                 "difficulty": "고급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.435565, 126.924462], "type": "start"},
+                        {"name": "경유지점", "coords": [33.437417, 126.930525], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.429918, 126.938157], "type": "waypoint"},
+                        {"name": "경유지점(섭지코지)", "coords": [33.421680, 126.934350], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.422464, 126.925870], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.427493, 126.921467], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.433336, 126.921792], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.434601, 126.923704], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/NUhttc9N1Ks",
@@ -549,6 +753,20 @@ SPOT_DATA = {
                 "distance": "3.5km",
                 "rating": 4.2,
                 "difficulty": "고급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.460447, 126.933770], "type": "start"},
+                        {"name": "경유지점", "coords": [33.455283, 126.939230], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.454730, 126.944283], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.455666, 126.947473], "type": "waypoint"},
+                        {"name": "경유지점(촛대바위)", "coords": [33.457114, 126.947294], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.457803, 126.945917], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.460783, 126.946016], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.462100, 126.940395], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.461995, 126.939069], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/Up1qNF8ES7o",
@@ -560,10 +778,19 @@ SPOT_DATA = {
             "하고수동해수욕장": {
                 "title": "하고수동해수욕장(우도)",
                 "description": "섬속의 섬에서",
-                "coordinates": [33.514798, 126.958688],
+                "coordinates": [33.514124, 126.958840],
                 "distance": "1.8km",
                 "rating": 3.6,
                 "difficulty": "초급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.514124, 126.958840], "type": "start"},
+                        {"name": "반환지점", "coords": [33.516485, 126.967573], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.515913, 126.963486], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.514124, 126.958840], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/-m8AwZlrwY4",
@@ -572,13 +799,25 @@ SPOT_DATA = {
                     }
                 ]
             },
-            "신동코지": {
+"신동코지": {
                 "title": "제주카약체험-신동코지불턱(토끼섬)",
                 "description": "토끼섬엔 토끼가 없다",
-                "coordinates": [33.515598, 126.902241],
+                "coordinates": [33.514959, 126.902113],
                 "distance": "3.4km",
                 "rating": 3.9,
                 "difficulty": "중급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.514959, 126.902113], "type": "start"},
+                        {"name": "경유지점", "coords": [33.518971, 126.906890], "type": "waypoint"},
+                        {"name": "경유지점(토끼섬)", "coords": [33.523907, 126.903573], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.523013, 126.902476], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.525034, 126.900358], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.528750, 126.894261], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.527870, 126.891780], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/46QuKrDwbwo",
@@ -587,13 +826,49 @@ SPOT_DATA = {
                     }
                 ]
             },
+            "세화포구-하도포구": {
+                "title": "세화포구-하도포구",
+                "description": "섬속의 섬에서",
+                "coordinates": [33.529031, 126.857657],
+                "distance": "3.4km",
+                "rating": 3.6,
+                "difficulty": "중급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.529031, 126.857657], "type": "start"},
+                        {"name": "경유지점", "coords": [33.531095, 126.864998], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.532966, 126.871628], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.533068, 126.880671], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.529716, 126.884798], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.527788, 126.883952], "type": "end"}
+                    ]
+                },
+                "videos": [
+                    {
+                        "url": "https://youtu.be/-m8AwZlrw",
+                        "title": "세화포구",
+                        "description": "맞조류를 견뎌라"
+                    }
+                ]
+            },
             "월정투명카약": {
                 "title": "월정투명카약-세기알해변",
                 "description": "김녕의 보석",
-                "coordinates": [33.566002, 126.779129],
+                "coordinates": [33.565581, 126.779139],
                 "distance": "3.1km",
                 "rating": 3.4,
                 "difficulty": "중급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.565581, 126.779139], "type": "start"},
+                        {"name": "경유지점", "coords": [33.567860, 126.776888], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.568627, 126.761839], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.564176, 126.758231], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.559868, 126.755147], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/Ml7Cb8eoyPQ",
@@ -605,10 +880,19 @@ SPOT_DATA = {
             "북촌환해장성": {
                 "title": "북촌환해장성-목지섬",
                 "description": "다채로운 바다",
-                "coordinates": [33.554748, 126.710768],
+                "coordinates": [33.553002, 126.699998],
                 "distance": "3.2km",
                 "rating": 3.8,
                 "difficulty": "중급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.553002, 126.699998], "type": "start"},
+                        {"name": "경유지점(소여도)", "coords": [33.556367, 126.711002], "type": "waypoint"},
+                        {"name": "경유지점(목지섬)", "coords": [33.563844, 126.729502], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.560437, 126.737408], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/kKrNavJKpYc",
@@ -624,6 +908,16 @@ SPOT_DATA = {
                 "distance": "1.9km",
                 "rating": 4.2,
                 "difficulty": "초급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.544800, 126.674291], "type": "start"},
+                        {"name": "경유지점", "coords": [33.549479, 126.673173], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.553400, 126.677656], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.552498, 126.682030], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.548711, 126.684055], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/fwAW_b_UdH4",
@@ -635,10 +929,21 @@ SPOT_DATA = {
             "관곶": {
                 "title": "관곶-정주항",
                 "description": "섬속을 누비는 즐거움",
-                "coordinates": [33.555509, 126.644597],
+                "coordinates": [33.552784, 126.642338],
                 "distance": "3km",
                 "rating": 3.8,
                 "difficulty": "중급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.552784, 126.642338], "type": "start"},
+                        {"name": "경유지점(관곶)", "coords": [33.555614, 126.643466], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.556296, 126.644972], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.553518, 126.654119], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.548918, 126.662614], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.547533, 126.662058], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/mt4r9Hx9kBA",
@@ -654,9 +959,25 @@ SPOT_DATA = {
                 "distance": "2km",
                 "rating": 3.4,
                 "difficulty": "초급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.535198, 126.603058], "type": "start"},
+                        {"name": "경유지점", "coords": [33.536741, 126.603288], "type": "waypoint"},
+                        {"name": "반환지점", "coords": [33.536821, 126.611576], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.537670, 126.606660], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.536741, 126.603288], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.535198, 126.603058], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/KFYn3sPHKkw",
+                        "title": "닭머르 수영",
+                        "description": "아무나 올 수 없는 특별한 장소"
+                    },
+{
+                        "url": "https://youtu.be/EyEN45fgb0Y",
                         "title": "닭머르 수영",
                         "description": "아무나 올 수 없는 특별한 장소"
                     }
@@ -673,6 +994,14 @@ SPOT_DATA = {
                 "distance": "1.5km",
                 "rating": 3.7,
                 "difficulty": "중급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "해운대 중앙", "coords": [35.1588, 129.1603], "type": "start"},
+                        {"name": "동백섬 방향", "coords": [35.1600, 129.1630], "type": "waypoint"},
+                        {"name": "해운대 중앙", "coords": [35.1588, 129.1603], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/tESMnqgBz7E",
@@ -688,6 +1017,14 @@ SPOT_DATA = {
                 "distance": "1.5km",
                 "rating": 3.2,
                 "difficulty": "초급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "송정해수욕장 중앙", "coords": [35.1785, 129.1998], "type": "start"},
+                        {"name": "송정 끝", "coords": [35.1795, 129.2008], "type": "waypoint"},
+                        {"name": "송정해수욕장 중앙", "coords": [35.1785, 129.1998], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/u6GNpGfimaM",
@@ -703,6 +1040,14 @@ SPOT_DATA = {
                 "distance": "1.5km",
                 "rating": 3.4,
                 "difficulty": "초급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "송도해수욕장 중앙", "coords": [35.075454, 129.017233], "type": "start"},
+                        {"name": "시티뷰 지점", "coords": [35.076000, 129.018000], "type": "waypoint"},
+                        {"name": "송도해수욕장 중앙", "coords": [35.075454, 129.017233], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/e1Kp4Rzkis0",
@@ -722,13 +1067,21 @@ SPOT_DATA = {
                 "distance": "3.2km",
                 "rating": 3.5,
                 "difficulty": "초급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "구조라해수욕장 출발", "coords": [34.810020, 128.686903], "type": "start"},
+                        {"name": "윤돌섬 근처", "coords": [34.812000, 128.689000], "type": "waypoint"},
+                        {"name": "구조라해수욕장 출발", "coords": [34.810020, 128.686903], "type": "end"}
+                    ]
+                },
                 "videos": [
                     {
                         "url": "https://youtu.be/bLmz_DcrTIw",
                         "title": "구조라해수욕장 수영",
                         "description": "거제도의 숨겨진 보석"
                     },
-{
+                    {
                         "url": "https://youtu.be/Bc2S6CaO7O8",
                         "title": "구조라해수욕장 수영",
                         "description": "거제도의 숨겨진 보석"
@@ -739,22 +1092,24 @@ SPOT_DATA = {
     }
 }
 
+
 def get_spot_main_video(spot_videos):
     """조회수가 가장 높은 영상을 메인 영상으로 선택"""
     if not spot_videos:
         return None
-    
+
     max_views = 0
     main_video = spot_videos[0]
-    
+
     for video in spot_videos:
         youtube_info = get_youtube_video_info(video['url'])
         views = youtube_info.get('viewCountNum', 0)
         if views > max_views:
             max_views = views
             main_video = video
-    
+
     return main_video
+
 
 def enrich_spot_data():
     """장소별 데이터를 YouTube 정보와 함께 enriched"""
@@ -767,7 +1122,12 @@ def enrich_spot_data():
             if main_video:
                 youtube_info = get_youtube_video_info(main_video['url'])
                 video_id = extract_video_id(main_video['url'])
-                
+
+                # 경로 통계 계산
+                route_points = [(point['coords'][0], point['coords'][1]) for point in
+                                spot.get('route', {}).get('points', [])]
+                total_distance, estimated_time = calculate_route_stats(route_points)
+
                 enriched_spot = {
                     **spot,
                     'spot_id': spot_name,
@@ -776,11 +1136,14 @@ def enrich_spot_data():
                     'views': youtube_info['viewCount'],
                     'date': youtube_info['publishedAt'],
                     'video_count': len(spot['videos']),
-                    'main_video_url': main_video['url']
+                    'main_video_url': main_video['url'],
+                    'calculated_distance': f"{total_distance:.1f}km",
+                    'estimated_time': f"{estimated_time}분"
                 }
                 enriched_spots.append(enriched_spot)
         enriched_data[location] = {'spots': enriched_spots}
     return enriched_data
+
 
 def create_map(spot_data):
     m = folium.Map(
@@ -788,14 +1151,67 @@ def create_map(spot_data):
         zoom_start=9,
         tiles='CartoDB dark_matter'
     )
-    
+
     for location, data in spot_data.items():
         for spot in data['spots']:
-           
-            # 모바일에서는 더 작은 팝업 사용
+            # 경로 정보가 있는 경우 경로를 지도에 표시
+            if 'route' in SPOT_DATA[location]['spots'][spot['spot_id']]:
+                route_info = SPOT_DATA[location]['spots'][spot['spot_id']]['route']
+                route_points = [point['coords'] for point in route_info['points']]
+
+                # 경로 타입에 따른 색상 설정
+                route_colors = {
+                    '왕복': '#fc2e2a',      # 초록색 - 왕복
+                    '편도': '#f7fe3e'       # 주황색 - 편도
+                }
+                route_color = route_colors.get(route_info['type'], '#ffffff')
+
+                # 경로선 그리기
+
+                folium.PolyLine(
+                    locations=route_points,
+                    color=route_color,
+                    weight=4,
+                    opacity=0.8,
+                    dash_array='5, 20, 10, 30',  # 점선 패턴 (10픽셀 선, 5픽셀 공백)
+                    popup=folium.Popup(f"""
+                        <div style="font-family: Arial; color: #333;">
+                            <b>{spot['title']}</b><br>
+                            경로 타입: {route_info['type']}<br>
+                            총 거리: {spot.get('calculated_distance', 'N/A')}<br>
+                            예상 소요시간: {spot.get('estimated_time', 'N/A')}
+                        </div>
+                    """, max_width=200)
+                ).add_to(m)
+
+                # 경로상의 포인트들에 작은 마커 추가
+                '''
+                for i, point in enumerate(route_info['points']):
+                    if point['type'] == 'start':
+                        icon_color = 'green'
+                        icon_symbol = 'play'
+                    elif point['type'] == 'end':
+                        icon_color = 'red'
+                        icon_symbol = 'stop'
+                    else:  # waypoint
+                        icon_color = 'blue'
+                        icon_symbol = 'info-sign'
+
+                    folium.Marker(
+                        location=point['coords'],
+                        popup=f"{point['name']}<br>타입: {point['type']}",
+                        icon=folium.Icon(
+                            color=icon_color,
+                            icon=icon_symbol,
+                            prefix='glyphicon'
+                        )
+                    ).add_to(m)
+                '''
+
+            # 메인 마커 (기존 코드)
             popup_html = f"""
-            <div style="width: 240px; font-family: 'Roboto', sans-serif; 
-                        background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden; margin: 0; padding: 0;"">
+            <div style="width: 260px; font-family: 'Roboto', sans-serif; 
+                        background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden; margin: 0; padding: 0;">
                 <div style="padding: 12px;">
                     <h3 style="margin: 0 0 6px 0; font-size: 14px; color: #ffffff;">
                         {spot['title']}
@@ -806,17 +1222,21 @@ def create_map(spot_data):
                     <div style="color: #aaaaaa; font-size: 13px; margin-bottom: 12px;">
                         {spot['description']}
                     </div>
-                    <div style="display: flex; gap: 16px; margin: 0; padding: 0; 
-                                border-top: 1px solid #3d3d3d;">
-                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
-                            <div style="color: #ffffff; font-weight: 500;">{spot['distance']}</div>
-                            <div>거리</div>
+                    <div style="display: flex; gap: 12px; margin: 0 0 8px 0; padding: 8px 0; 
+                                border-top: 1px solid #3d3d3d; border-bottom: 1px solid #3d3d3d;">
+                        <div style="text-align: center; color: #aaaaaa; font-size: 11px;">
+                            <div style="color: #ffffff; font-weight: 500;">{spot.get('calculated_distance', spot['distance'])}</div>
+                            <div>실제거리</div>
                         </div>
-                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
+                        <div style="text-align: center; color: #aaaaaa; font-size: 11px;">
+                            <div style="color: #ffffff; font-weight: 500;">{spot.get('estimated_time', 'N/A')}</div>
+                            <div>예상시간</div>
+                        </div>
+                        <div style="text-align: center; color: #aaaaaa; font-size: 11px;">
                             <div style="color: {get_difficulty_color(spot['difficulty'])}; font-weight: 500;">{spot['difficulty']}</div>
                             <div>난이도</div>
                         </div>
-                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
+                        <div style="text-align: center; color: #aaaaaa; font-size: 11px;">
                             <div style="color: #ffaa00; font-weight: 500;">★{spot['rating']}</div>
                             <div>평점</div>
                         </div>
@@ -830,38 +1250,53 @@ def create_map(spot_data):
                 </div>
             </div>
             """
-            
+
             marker_size = get_marker_size(spot['rating'])
-            difficulty_color = get_difficulty_color(spot['difficulty'])
-            
-           # 마커에 JavaScript 클릭 이벤트 추가
+
             marker_html = f'''
-            <div style="width: {marker_size}px; height: {marker_size}px; background: {difficulty_color}; 
-                    border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
-                    justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;"
-                onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">
-               <svg width="{int(marker_size*0.4)}" height="{int(marker_size*0.4)}" viewBox="0 0 24 24" fill="white">
-                    <path d="M8 5v14l11-7z"/>
+
+            <div style="width: {marker_size}px; height: {marker_size}px; background: #ff0000;
+                    border: 3px solid #ffffff; border-radius: 12px; display: flex; align-items: center;
+                    justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4); cursor: pointer;"
+                onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">               
+               <svg width="{int(marker_size*0.5)}" height="{int(marker_size*0.5)}" viewBox="0 0 24 24" fill="white">
+                    <path d="M8 5v14l11-7z" stroke="white" stroke-width="1"/>
                </svg>
             </div>
             '''
-          
+
             folium.Marker(
                 location=spot['coordinates'],
                 popup=folium.Popup(
-                    popup_html, 
-                    max_width=250,
-                    max_height=200,  # 높이 제한 추가
+                    popup_html,
+                    max_width=280,
+                    max_height=250,
                     parse_html=False,
                     sticky=True,
-                    # 여백 제거를 위한 CSS 추가
                     style="margin: 0; padding: 0;"
                 ),
                 tooltip=f"📍 {spot['title']} ({location}) - {spot['video_count']}개 영상",
-                icon=folium.DivIcon(html=marker_html, icon_size=(marker_size, marker_size), icon_anchor=(marker_size//2, marker_size//2))
+                icon=folium.DivIcon(html=marker_html, icon_size=(marker_size, marker_size),
+                                    icon_anchor=(marker_size // 2, marker_size // 2))
             ).add_to(m)
-    
+
+    # 범례 추가
+    legend_html = '''
+    <div style="position: fixed; 
+                top: 10px; right: 10px; width: 200px; height: 80px; 
+                background-color: rgba(24, 24, 24, 0.8); color: white;
+                border: 2px solid #3d3d3d; z-index:9999; font-size:12px;
+                border-radius: 8px; padding: 10px;">
+    <p style="margin: 0 0 5px 0; font-weight: bold;">경로 범례</p>
+    <p style="margin: 2px 0;"><span style="color: #fc2e2a;">━━━</span> 왕복 코스</p>
+    <p style="margin: 2px 0;"><span style="color: #f7fe3e;">━━━</span> 편도 코스</p>
+    </div>
+    '''
+
+    m.get_root().html.add_child(folium.Element(legend_html))
+
     return m
+
 
 @app.route('/')
 def index():
@@ -870,28 +1305,28 @@ def index():
         channel_info = get_channel_info()
         folium_map = create_map(enriched_spot_data)
         map_html = folium_map._repr_html_()
-        
+
         total_spots = sum(len(data['spots']) for data in enriched_spot_data.values())
         total_locations = len(enriched_spot_data)
-        total_videos = sum(len(SPOT_DATA[location]['spots'][spot_name]['videos']) 
-                          for location in SPOT_DATA 
-                          for spot_name in SPOT_DATA[location]['spots'])
-        
+        total_videos = sum(len(SPOT_DATA[location]['spots'][spot_name]['videos'])
+                           for location in SPOT_DATA
+                           for spot_name in SPOT_DATA[location]['spots'])
+
         all_ratings = []
         for location_data in SPOT_DATA.values():
             for spot in location_data['spots'].values():
                 all_ratings.append(spot['rating'])
         avg_rating = sum(all_ratings) / len(all_ratings) if all_ratings else 0
-        
+
     except Exception as e:
         print(f"오류: {e}")
         enriched_spot_data = SPOT_DATA
         channel_info = get_channel_info()
         folium_map = create_map(enriched_spot_data)
         map_html = folium_map._repr_html_()
-        total_spots = 10
-        total_locations = 3
-        total_videos = 10
+        total_spots = 3
+        total_locations = 2
+        total_videos = 3
         avg_rating = 4.0
 
     html = '''<!DOCTYPE html>
@@ -968,9 +1403,27 @@ def index():
             border-radius: 12px; 
             overflow: hidden; 
             box-shadow: 0 2px 16px rgba(0,0,0,0.4); 
-            height: 400px; 
+            height: 500px; 
         }
         .map-container iframe { width: 100% !important; height: 100% !important; }
+
+        .map-info {
+            background: #212121;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #3d3d3d;
+        }
+        .map-info h3 {
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .map-info p {
+            color: #aaaaaa;
+            font-size: 14px;
+            line-height: 1.5;
+        }
 
         .location-section { margin-bottom: 32px; }
         .location-header { display: flex; align-items: center; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
@@ -1034,6 +1487,19 @@ def index():
             font-size: 10px; 
             font-weight: 500;
         }
+        .route-type-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 500;
+            color: white;
+        }
+        .route-왕복 { background: rgba(0, 255, 0, 0.8); }
+        .route-편도 { background: rgba(255, 170, 0, 0.8); }
+
         .spot-overlay { 
             position: absolute; 
             top: 0; 
@@ -1093,7 +1559,7 @@ def index():
         .difficulty-초급 { color: #00ff00; }
         .difficulty-중급 { color: #ffaa00; }
         .difficulty-고급 { color: #ff4444; }
- 
+
         @media (min-width: 480px) {
             .header { padding: 16px 20px; }
             .channel-avatar { width: 48px; height: 48px; }
@@ -1104,7 +1570,7 @@ def index():
             .stat-number { font-size: 24px; }
             .stat-label { font-size: 13px; }
             .section-title { font-size: 20px; }
-            .map-container { height: 500px; }
+            .map-container { height: 600px; }
             .spots-grid { grid-template-columns: 1fr; gap: 20px; }
             .spot-thumbnail { width: 160px; height: 120px; }
             .spot-title { font-size: 15px; }
@@ -1117,7 +1583,7 @@ def index():
             .stat-card { padding: 20px; }
             .stat-number { font-size: 28px; }
             .stat-label { font-size: 14px; }
-            .map-container { height: 600px; }
+            .map-container { height: 700px; }
             .spots-grid { grid-template-columns: repeat(2, 1fr); }
             .spot-card { display: block; }
             .spot-thumbnail { width: 100%; height: 200px; }
@@ -1156,7 +1622,12 @@ def index():
         </div>
 
         <section class="map-section">
-            <h2 class="section-title">수영 위치 지도</h2>
+            <h2 class="section-title">수영 위치 및 경로 지도</h2>
+            <div class="map-info">
+                <h3>지도 사용 안내</h3>
+                <p>• 색깔별 선: 빨강(왕복), 노랑(편도) 수영 경로를 나타냅니다<br>
+                • 마커 클릭: 상세 정보 및 계산된 거리/예상 소요시간을 확인할 수 있습니다</p>
+            </div>
             <div class="map-container">{{ map_html|safe }}</div>
         </section>
 
@@ -1172,15 +1643,26 @@ def index():
                     <option value="rating-desc">평점 높은순</option>
                     <option value="views-desc">조회수 높은순</option>
                     <option value="date-desc">최신순</option>
+                    <option value="distance-asc">거리 짧은순</option>
+                    <option value="distance-desc">거리 긴순</option>
                 </select>
             </div>
             <div class="spots-grid" id="spots-{{ location }}">
                 {% for spot in data.spots %}
-                <div class="spot-card" onclick="location.href='/spot/{{ location|urlencode }}/{{ spot.spot_id|urlencode }}'" data-rating="{{ spot.rating }}" data-views="{{ spot.views }}" data-date="{{ spot.date }}">
+                <div class="spot-card" onclick="location.href='/spot/{{ location|urlencode }}/{{ spot.spot_id|urlencode }}'" 
+                     data-rating="{{ spot.rating }}" data-views="{{ spot.views }}" data-date="{{ spot.date }}" 
+                     data-distance="{{ spot.get('calculated_distance', '0km').replace('km', '') }}">
                     <div class="spot-thumbnail">
                         <img src="{{ spot.thumbnail }}" alt="{{ spot.title }}">
                         <div class="spot-duration">{{ spot.duration }}</div>
                         <div class="video-count-badge">{{ spot.video_count }}개</div>
+                        {% if spot.get('route') %}
+                        <div class="route-type-badge route-{{ spot.route.type }}">
+                            {% if spot.route.type == '왕복' %}왕복
+                            {% elif spot.route.type == '편도' %}편도
+                            {% endif %}
+                        </div>
+                        {% endif %}
                         <div class="spot-overlay">
                             <div class="play-btn">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="#181818"><path d="M8 5v14l11-7z"/></svg>
@@ -1192,10 +1674,10 @@ def index():
                         <div class="spot-description">{{ spot.description }}</div>
                         <div class="spot-meta">조회수 {{ spot.views }}회 • {{ spot.date }}</div>
                         <div class="spot-stats">
-                            <span class="spot-stat">📍{{ spot.distance }}</span>
+                            <span class="spot-stat">📍{{ spot.get('calculated_distance', spot.distance) }}</span>
+                            <span class="spot-stat">⏱️{{ spot.get('estimated_time', 'N/A') }}</span>
                             <span class="spot-stat difficulty-{{ spot.difficulty }}">● {{ spot.difficulty }}</span>
                             <span class="spot-stat">⭐ {{ spot.rating }}</span>
-                            <span class="spot-stat">{{ spot.video_count }}개 영상</span>
                         </div>
                     </div>
                 </div>
@@ -1225,6 +1707,8 @@ def index():
                 if (sortType === 'rating-desc') return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
                 if (sortType === 'views-desc') return parseViews(b.dataset.views) - parseViews(a.dataset.views);
                 if (sortType === 'date-desc') return new Date(b.dataset.date) - new Date(a.dataset.date);
+                if (sortType === 'distance-asc') return parseFloat(a.dataset.distance) - parseFloat(b.dataset.distance);
+                if (sortType === 'distance-desc') return parseFloat(b.dataset.distance) - parseFloat(a.dataset.distance);
                 return 0;
             });
             spots.forEach(spot => container.appendChild(spot));
@@ -1240,24 +1724,25 @@ def index():
 </body>
 </html>'''
 
-    return render_template_string(html, 
-        map_html=map_html,
-        total_locations=total_locations,
-        total_spots=total_spots,
-        total_videos=total_videos,
-        avg_rating=avg_rating,
-        spot_data=enriched_spot_data,
-        channel_info=channel_info
-    )
+    return render_template_string(html,
+                                  map_html=map_html,
+                                  total_locations=total_locations,
+                                  total_spots=total_spots,
+                                  total_videos=total_videos,
+                                  avg_rating=avg_rating,
+                                  spot_data=enriched_spot_data,
+                                  channel_info=channel_info
+                                  )
+
 
 @app.route('/spot/<location>/<spot_id>')
 def spot_detail(location, spot_id):
-    """개별 장소의 상세 페이지 - 해당 장소의 모든 영상 표시"""
+    """개별 장소의 상세 페이지 - 경로 정보 포함"""
     try:
         spot_data = SPOT_DATA.get(location, {}).get('spots', {}).get(spot_id)
         if not spot_data:
             return "장소를 찾을 수 없습니다", 404
-        
+
         # 해당 장소의 모든 영상 정보 가져오기
         enriched_videos = []
         for video in spot_data['videos']:
@@ -1270,14 +1755,80 @@ def spot_detail(location, spot_id):
                 'duration': youtube_info['duration'],
                 'views': youtube_info['viewCount'],
                 'date': youtube_info['publishedAt'],
-                'title': youtube_info.get('title') or video['title'],  # YouTube 제목 우선, 없으면 하드코딩 제목
-                'original_title': video['title']  # 하드코딩 제목을 별도 보관
+                'title': youtube_info.get('title') or video['title'],
+                'original_title': video['title']
             })
-        
+
+        # 경로 정보 계산
+        route_info = spot_data.get('route', {})
+        route_points = [(point['coords'][0], point['coords'][1]) for point in route_info.get('points', [])]
+        total_distance, estimated_time = calculate_route_stats(route_points)
+
         # 채널 정보
         channel_info = get_channel_info()
-        
-        # 상세 페이지 HTML 템플릿
+
+        # 경로 전용 지도 생성
+        if route_info:
+            route_map = folium.Map(
+                location=spot_data['coordinates'],
+                zoom_start=14,
+                tiles='CartoDB dark_matter'
+            )
+
+            # 경로선 그리기
+            route_colors = {'왕복': '#fc2e2a', '편도': '#f7fe3e'}
+            route_color = route_colors.get(route_info['type'], '#ffffff')
+
+            folium.PolyLine(
+                locations=[point['coords'] for point in route_info['points']],
+                color=route_color,
+                weight=5,
+                opacity=0.8,
+                dash_array='5, 20, 10, 30'  # 점선 패턴 추가
+            ).add_to(route_map)
+
+            '''
+            # 경로 포인트 마커
+            for i, point in enumerate(route_info['points']):
+                if point['type'] == 'start':
+                    marker_style = """
+                    <div style="width: 24px; height: 24px; background: linear-gradient(45deg, #00ff41, #00cc33); 
+                                border: 2px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
+                                justify-content: center; box-shadow: 0 0 15px #00ff41;">
+                        <span style="color: black; font-weight: bold; font-size: 12px;">S</span>
+                    </div>"""
+                elif point['type'] == 'end':
+                    marker_style = """
+                    <div style="width: 24px; height: 24px; background: linear-gradient(45deg, #ff0080, #cc0066); 
+                                border: 2px solid #ffffff; border-radius: 50%; display: flex; align-items: center; 
+                                justify-content: center; box-shadow: 0 0 15px #ff0080;">
+                        <span style="color: white; font-weight: bold; font-size: 12px;">E</span>
+                    </div>"""
+                else:  # waypoint
+                    marker_style = """
+                    <div style="width: 20px; height: 20px; background: linear-gradient(45deg, #00d4ff, #0099cc); 
+                                border: 2px solid #ffffff; border-radius: 6px; display: flex; align-items: center; 
+                                justify-content: center; box-shadow: 0 0 12px #00d4ff;">
+                        <span style="color: black; font-weight: bold; font-size: 10px;">""" + str(i) + """</span>
+                    </div>"""
+
+                folium.Marker(
+                    location=point['coords'],
+                    popup=f"{point['name']}<br>타입: {point['type']}",
+                    icon=folium.DivIcon(html=marker_style, icon_size=(24, 24))
+                ).add_to(m)
+
+                folium.Marker(
+                    location=point['coords'],
+                    popup=f"<b>{point['name']}</b><br>포인트 {i + 1}: {point['type']}",
+                    icon=folium.Icon(color=icon_color, icon=icon_symbol, prefix='glyphicon')
+                ).add_to(route_map)
+            '''
+
+            route_map_html = route_map._repr_html_()
+        else:
+            route_map_html = "<p>이 장소에는 경로 정보가 없습니다.</p>"  # <- 12칸(또는 3탭) 들여쓰기 추가
+
         detail_html = '''<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -1346,9 +1897,71 @@ def spot_detail(location, spot_id):
         }
         .info-value { font-size: 18px; font-weight: 600; color: #ffffff; margin-bottom: 4px; }
         .info-label { font-size: 12px; color: #aaaaaa; }
-        .difficulty-초급 { color: #ff6b6b; }
-        .difficulty-중급 { color: #ff4757; }
-        .difficulty-고급 { color: #c44569; }
+        .difficulty-초급 { color: #00ff00; }
+        .difficulty-중급 { color: #ffaa00; }
+        .difficulty-고급 { color: #ff4444; }
+
+        .route-section {
+            background: #181818;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            border: 1px solid #3d3d3d;
+        }
+        .route-title { font-size: 20px; font-weight: 600; color: #ffffff; margin-bottom: 16px; }
+        .route-map-container {
+            background: #212121;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 400px;
+            margin-bottom: 16px;
+        }
+        .route-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .route-stat-item {
+            background: #212121;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .route-stat-value { font-size: 20px; font-weight: 600; color: #ffffff; margin-bottom: 4px; }
+        .route-stat-label { font-size: 12px; color: #aaaaaa; }
+
+        .route-points {
+            background: #212121;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .route-points h4 { color: #ffffff; margin-bottom: 12px; }
+        .route-point {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            margin-bottom: 8px;
+            background: #2d2d2d;
+            border-radius: 6px;
+        }
+        .route-point-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+        }
+        .marker-start { background: #00aa00; }
+        .marker-end { background: #aa0000; }
+        .marker-waypoint { background: #0066aa; }
+        .route-point-name { color: #ffffff; font-weight: 500; }
+        .route-point-coords { color: #aaaaaa; font-size: 12px; }
 
         .videos-section h2 { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #ffffff; }
         .videos-grid { 
@@ -1423,6 +2036,7 @@ def spot_detail(location, spot_id):
         @media (min-width: 768px) {
             .container { padding: 24px; }
             .spot-title { font-size: 28px; }
+            .route-map-container { height: 500px; }
             .videos-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
         }
 
@@ -1449,8 +2063,12 @@ def spot_detail(location, spot_id):
             <p class="spot-description">{{ spot.description }}</p>
             <div class="spot-info-grid">
                 <div class="info-item">
-                    <div class="info-value">{{ spot.distance }}</div>
-                    <div class="info-label">거리</div>
+                    <div class="info-value">{{ calculated_distance }}</div>
+                    <div class="info-label">계산된 거리</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">{{ estimated_time }}분</div>
+                    <div class="info-label">예상 소요시간</div>
                 </div>
                 <div class="info-item">
                     <div class="info-value difficulty-{{ spot.difficulty }}">{{ spot.difficulty }}</div>
@@ -1464,8 +2082,46 @@ def spot_detail(location, spot_id):
                     <div class="info-value">{{ videos|length }}개</div>
                     <div class="info-label">영상 수</div>
                 </div>
+                {% if route_info %}
+                <div class="info-item">
+                    <div class="info-value">
+                        {% if route_info.type == '왕복' %}왕복
+                        {% elif route_info.type == '편도' %}편도
+                        {% endif %}
+                    </div>
+                    <div class="info-label">경로 타입</div>
+                </div>
+                {% endif %}
             </div>
         </div>
+        
+       
+
+        {% if route_info %}
+        <section class="route-section">
+    
+            <h2 class="route-title">수영 경로 정보</h2>
+            <div class="route-map-container">{{ route_map_html|safe }}</div>        
+                    
+            <div class="route-points">
+                <h4>경로 포인트 상세</h4>
+                {% for point in route_info.points %}
+                <div class="route-point">
+                    <div class="route-point-marker marker-{{ point.type }}">
+                        {% if point.type == 'start' %}S
+                        {% elif point.type == 'end' %}E
+                        {% else %}{{ loop.index }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div class="route-point-name">{{ point.name }}</div>
+                        <div class="route-point-coords">{{ "%.6f"|format(point.coords[0]) }}, {{ "%.6f"|format(point.coords[1]) }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
 
         <section class="videos-section">
             <h2>이 장소의 수영 영상들</h2>
@@ -1493,16 +2149,22 @@ def spot_detail(location, spot_id):
     </div>
 </body>
 </html>'''
-        
+
         return render_template_string(detail_html,
-                                    spot=spot_data,
-                                    videos=enriched_videos,
-                                    location=location,
-                                    channel_info=channel_info)
-        
+                                      spot=spot_data,
+                                      videos=enriched_videos,
+                                      location=location,
+                                      channel_info=channel_info,
+                                      route_info=route_info,
+                                      route_map_html=route_map_html,
+                                      total_distance=total_distance,
+                                      estimated_time=estimated_time,
+                                      calculated_distance=f"{total_distance:.1f}km")
+
     except Exception as e:
         print(f"Spot detail error: {e}")
         return f"오류가 발생했습니다: {str(e)}", 500
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

@@ -1291,7 +1291,7 @@ def create_map(spot_data):
     <p style="margin: 2px 0;"><span style="color: #fc2e2a;">━━━</span> 왕복 코스</p>
     <p style="margin: 2px 0;"><span style="color: #f7fe3e;">━━━</span> 편도 코스</p>
     </div>
-    '''
+    
 
     m.get_root().html.add_child(folium.Element(legend_html))
 

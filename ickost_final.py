@@ -1281,7 +1281,7 @@ def create_map(spot_data):
             ).add_to(m)
 
     '''# 범례 추가
-    legend_html = '''
+    legend_html = 
     <div style="position: fixed; 
                 top: 10px; right: 10px; width: 200px; height: 80px; 
                 background-color: rgba(24, 24, 24, 0.8); color: white;

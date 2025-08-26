@@ -1280,8 +1280,8 @@ def create_map(spot_data):
                                     icon_anchor=(marker_size // 2, marker_size // 2))
             ).add_to(m)
 
-    '''# 범례 추가
-    legend_html = 
+    # 범례 추가
+    legend_html = '''
     <div style="position: fixed; 
                 top: 10px; right: 10px; width: 200px; height: 80px; 
                 background-color: rgba(24, 24, 24, 0.8); color: white;
@@ -1290,12 +1290,12 @@ def create_map(spot_data):
     <p style="margin: 0 0 5px 0; font-weight: bold;">경로 범례</p>
     <p style="margin: 2px 0;"><span style="color: #fc2e2a;">━━━</span> 왕복 코스</p>
     <p style="margin: 2px 0;"><span style="color: #f7fe3e;">━━━</span> 편도 코스</p>
-    </div>
+    </div>'''
     
 
     m.get_root().html.add_child(folium.Element(legend_html))
 
-    return m'''
+    return m
 
 
 @app.route('/')

@@ -1280,7 +1280,7 @@ def create_map(spot_data):
                                     icon_anchor=(marker_size // 2, marker_size // 2))
             ).add_to(m)
 
-    # 범례 추가
+    '''# 범례 추가
     legend_html = '''
     <div style="position: fixed; 
                 top: 10px; right: 10px; width: 200px; height: 80px; 
@@ -1295,7 +1295,7 @@ def create_map(spot_data):
 
     m.get_root().html.add_child(folium.Element(legend_html))
 
-    return m
+    return m'''
 
 
 @app.route('/')

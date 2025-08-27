@@ -1846,12 +1846,15 @@ def spot_detail(location, spot_id):
             background: #3d3d3d;
             color: white;
             border: none;
-            padding: 8px 12px;
+            padding: 8px 16px; /* 패딩 약간 증가 */
             border-radius: 8px;
             font-size: 13px;
             cursor: pointer;
             margin-right: 16px;
             transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px; /* 아이콘과 텍스트 간격 */
         }
         .back-btn:hover { background: #555; }
         .channel-info { display: flex; align-items: center; gap: 12px; flex: 1; }
@@ -2039,7 +2042,7 @@ def spot_detail(location, spot_id):
 </head>
 <body>
     <header class="header">
-        <button class="back-btn" onclick="history.back()">← 뒤로</button>
+        <button class="back-btn" onclick="window.location.href='/'">← 홈으로</button>
         <div class="channel-info">
             <div class="channel-avatar"><img src="{{ channel_info.thumbnail }}" alt="{{ channel_info.title }}"></div>
             <div class="channel-details">

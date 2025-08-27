@@ -1452,7 +1452,12 @@ def index():
             height: 90px; 
             flex-shrink: 0;
         }
-        .spot-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+        .spot-thumbnail img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; /* 원본 비율 유지하면서 전체 표시 */
+            background-color: #000; /* 여백 부분을 검은색으로 */
+        }        
         .spot-duration { 
             position: absolute; 
             bottom: 4px; 

@@ -846,7 +846,7 @@ SPOT_DATA = {
                 },
                 "videos": [
                     {
-                        "url": "https://youtu.be/-m8AwZlrw",
+                        "url": "https://youtu.be/zQKfALbIxrA",
                         "title": "세화포구",
                         "description": "맞조류를 견뎌라"
                     }

@@ -505,6 +505,11 @@ SPOT_DATA = {
                         "url": "https://youtu.be/ST9Q3KQsQr4?si=FyT9I_Rg5rVZEGQy",
                         "title": "곽지해수욕장 수영",
                         "description": "제주 서쪽 바다의 아름다운 색깔들"
+                    },
+                    {
+                        "url": "https://youtu.be/O-So_u-d5Gk",
+                        "title": "곽지해수욕장 수영",
+                        "description": "제주 서쪽 바다의 아름다운 색깔들"
                     }
                 ]
             },
@@ -828,7 +833,7 @@ SPOT_DATA = {
             },
             "세화포구-하도포구": {
                 "title": "세화포구-하도포구",
-                "description": "섬속의 섬에서",
+                "description": "해안선을 따라 솟은 평화로운 마을",
                 "coordinates": [33.529031, 126.857657],
                 "distance": "3.4km",
                 "rating": 3.6,

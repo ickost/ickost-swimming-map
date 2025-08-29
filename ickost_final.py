@@ -995,16 +995,17 @@ SPOT_DATA = {
             "해운대해수욕장": {
                 "title": "해운대해수욕장",
                 "description": "전국 바다수영의 성지",
-                "coordinates": [35.1588, 129.1603],
+                "coordinates": [35.157389, 129.157273],
                 "distance": "1.5km",
                 "rating": 3.7,
                 "difficulty": "중급",
                 "route": {
-                    "type": "왕복",
+                    "type": "편도",
                     "points": [
-                        {"name": "해운대 중앙", "coords": [35.1588, 129.1603], "type": "start"},
-                        {"name": "동백섬 방향", "coords": [35.1600, 129.1630], "type": "waypoint"},
-                        {"name": "해운대 중앙", "coords": [35.1588, 129.1603], "type": "end"}
+                        {"name": "입수지점", "coords": [35.157389, 129.157273], "type": "start"},
+                        {"name": "경유지점", "coords": [35.154618, 129.158947], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [35.157197, 129.167358], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [35.159021, 129.166714], "type": "end"}
                     ]
                 },
                 "videos": [
@@ -1018,16 +1019,18 @@ SPOT_DATA = {
             "송정해수욕장": {
                 "title": "송정해수욕장",
                 "description": "천지개벽한 송정앞바다",
-                "coordinates": [35.1785, 129.1998],
+                "coordinates": [35.180158, 129.203572],
                 "distance": "1.5km",
                 "rating": 3.2,
                 "difficulty": "초급",
                 "route": {
                     "type": "왕복",
                     "points": [
-                        {"name": "송정해수욕장 중앙", "coords": [35.1785, 129.1998], "type": "start"},
-                        {"name": "송정 끝", "coords": [35.1795, 129.2008], "type": "waypoint"},
-                        {"name": "송정해수욕장 중앙", "coords": [35.1785, 129.1998], "type": "end"}
+                        {"name": "입수지점", "coords": [35.180158, 129.203572], "type": "start"},
+                        {"name": "경유지점", "coords": [35.177968, 129.205154], "type": "waypoint"},
+                        {"name": "반환지점", "coords": [35.174318, 129.199234], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [35.177968, 129.205154], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [35.180158, 129.203572], "type": "end"}
                     ]
                 },
                 "videos": [
@@ -1041,16 +1044,18 @@ SPOT_DATA = {
             "송도해수욕장": {
                 "title": "송도해수욕장",
                 "description": "시티뷰가 좋은 포인트",
-                "coordinates": [35.075454, 129.017233],
+                "coordinates": [35.074453, 129.017126],
                 "distance": "1.5km",
                 "rating": 3.4,
                 "difficulty": "초급",
                 "route": {
                     "type": "왕복",
                     "points": [
-                        {"name": "송도해수욕장 중앙", "coords": [35.075454, 129.017233], "type": "start"},
-                        {"name": "시티뷰 지점", "coords": [35.076000, 129.018000], "type": "waypoint"},
-                        {"name": "송도해수욕장 중앙", "coords": [35.075454, 129.017233], "type": "end"}
+                        {"name": "입수지점", "coords": [35.074453, 129.017126], "type": "start"},
+                        {"name": "경유지점", "coords": [35.072117, 129.019679], "type": "waypoint"},
+                        {"name": "반환지점", "coords": [35.074751, 129.022082], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [35.072117, 129.019679], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [35.074453, 129.017126], "type": "start"},
                     ]
                 },
                 "videos": [

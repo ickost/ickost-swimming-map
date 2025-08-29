@@ -1072,17 +1072,20 @@ SPOT_DATA = {
         "spots": {
             "구조라해수욕장": {
                 "title": "구조라해수욕장",
-                "description": "윤돌섬이 보이는 해파리천국",
-                "coordinates": [34.810020, 128.686903],
+                "description": "윤돌섬 한바퀴 돌기",
+                "coordinates": [34.809356, 128.688286],
                 "distance": "3.2km",
                 "rating": 3.5,
                 "difficulty": "초급",
                 "route": {
                     "type": "왕복",
                     "points": [
-                        {"name": "구조라해수욕장 출발", "coords": [34.810020, 128.686903], "type": "start"},
-                        {"name": "윤돌섬 근처", "coords": [34.812000, 128.689000], "type": "waypoint"},
-                        {"name": "구조라해수욕장 출발", "coords": [34.810020, 128.686903], "type": "end"}
+                        {"name": "입수지점", "coords": [34.809356, 128.688286], "type": "start"},
+                        {"name": "경유지점", "coords": [34.805934, 128.681845], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [34.804675, 128.681430], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [34.804349, 128.680058], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [34.807104, 128.680058], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [34.809356, 128.688286], "type": "start"},
                     ]
                 },
                 "videos": [

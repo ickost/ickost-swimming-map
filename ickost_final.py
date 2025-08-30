@@ -465,7 +465,7 @@ SPOT_DATA = {
                         "url": "https://youtu.be/eKrG--YI7k8",
                         "title": "곽지해수욕장 수영",
                         "description": "제주 서쪽 바다의 아름다운 색깔들"
-                    }
+                    },
                     {
                         "url": "https://youtu.be/H6X039gZHdM?si=u4srpYIX2tR-90GZ",
                         "title": "곽지해수욕장 수영",

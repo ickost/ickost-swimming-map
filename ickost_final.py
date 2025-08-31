@@ -411,74 +411,7 @@ SPOT_DATA = {
                         "description": "500미터 인터벌 훈련 완주 도전"
                     }
                 ]
-            },
-            "연대포구": {
-                "title": "연대포구",
-                "description": "스노클링 최적지            ]
-            },
-            "용담포구": {
-                "title": "용담포구(용두암)",
-                "description": "제주에서의 시티뷰",
-                "coordinates": [33.518360, 126.501244],
-                "distance": "2km",
-                "rating": 3.6,
-                "difficulty": "초급",
-                "route": {
-                    "type": "왕복",
-                    "points": [
-                        {"name": "입수지점", "coords": [33.518360, 126.501244], "type": "start"},
-                        {"name": "반환지점(용두암)", "coords": [33.516918, 126.511891], "type": "waypoint"},
-                        {"name": "경유지점", "coords": [33.518911, 126.507002], "type": "waypoint"},
-                        {"name": "퇴수지점", "coords": [33.518360, 126.501244], "type": "end"}
-                    ]
-                },
-                "videos": [
-                    {
-                        "url": "https://youtu.be/vrMIBOMAE6Y?si=q7_W4aUSJTpHRmip",
-                        "title": "용담포구 수영",
-                        "description": "용두암을 배경으로 한 시티뷰 수영"
-                    },
-                    {
-                        "url": "https://youtu.be/dtbjk7aZNeQ",
-                        "title": "용담포구 수영",
-                        "description": "용두암을 배경으로 한 시티뷰 수영"
-                    }
-                ]
-            },
-            "현사포구": {
-                "title": "현사포구",
-                "description": "500미터 인터벌 훈련",
-                "coordinates": [33.498385, 126.449710],
-                "distance": "500m",
-                "rating": 3.5,
-                "difficulty": "초급",
-                "route": {
-                    "type": "왕복",
-                    "points": [
-                        {"name": "입수지점", "coords": [33.498385, 126.449710], "type": "start"},
-                        {"name": "반환지점", "coords": [33.499037, 126.444161], "type": "waypoint"},
-                        {"name": "경유지점", "coords": [33.499170, 126.447727], "type": "waypoint"},
-                        {"name": "퇴수지점", "coords": [33.498385, 126.449710], "type": "end"}
-                    ]
-                },
-                "videos": [
-                    {
-                        "url": "https://youtu.be/ZlPalFpXqxc",
-                        "title": "현사포구 인터벌 훈련",
-                        "description": "500미터 인터벌 훈련 완주 도전"
-                    },
-                    {
-                        "url": "https://youtu.be/gyA6zATW1dM",
-                        "title": "현사포구 인터벌 훈련",
-                        "description": "500미터 인터벌 훈련 완주 도전"
-                    },
-                    {
-                        "url": "https://youtu.be/eG0j0P4lYPE",
-                        "title": "현사포구 인터벌 훈련",
-                        "description": "500미터 인터벌 훈련 완주 도전"
-                    }
-                ]
-            },
+            },       
             "연대포구": {
                 "title": "연대포구",
                 "description": "스노클링 최적지",

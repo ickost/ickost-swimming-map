@@ -430,8 +430,8 @@ SPOT_DATA = {
                 },
                 "videos": [
                     {
-                        "url": "https://youtu.be/ZlPalFpXqxc",
-                        "title": "현사포구",
+                        "url": "https://youtu.be/i4B9aJZrxBY",
+                        "title": "연대포구",
                         "description": "스노클링 최적지"
                     }
                 ]
@@ -569,7 +569,36 @@ SPOT_DATA = {
                         "title": "비양도 일주 수영",
                         "description": "작은 섬을 한바퀴 도는 도전"
                     }
+                ]   
+            
+            },
+            "두모포구-월령포구": {
+                "title": "두모포구-월령포구",
+                "description": "최대 난이도",
+                "coordinates": [33.356881, 126.179519],
+                "distance": "4.5km",
+                "rating": 4.2,
+                "difficulty": "고급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.356881, 126.179519], "type": "start"},
+                        {"name": "경유지점", "coords": [33.358503, 126.179607], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.360707, 126.183373], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.365678, 126.189974], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.367479, 126.199735], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.375939, 126.206874], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.379331, 126.215157], "type": "end"}
+                    ]
+                },
+                "videos": [
+                    {
+                        "url": "https://youtu.be/4G6gIcR9PoQ",
+                        "title": "두모포구-월령포구",
+                        "description": "최대 난이도의 바다"
+                    }
                 ]
+                
             },
             "송악산항": {
                 "title": "송악산항-하도방파제",

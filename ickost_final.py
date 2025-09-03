@@ -593,7 +593,7 @@ SPOT_DATA = {
                 },
                 "videos": [
                     {
-                        "url": "https://youtu.be/4G6gIcR9PoQ",
+                        "url": "https://youtu.be/8fqkfpuk2os",
                         "title": "두모포구-월령포구",
                         "description": "최대 난이도의 바다"
                     }

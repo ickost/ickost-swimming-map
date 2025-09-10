@@ -658,11 +658,11 @@ SPOT_DATA = {
                 ]
             },
              "대평포구(박수기정)": {
-                "title": "대평포구(박수기정))",
+                "title": "대평포구(박수기정)",
                 "description": "절벽이 바다와 닿은 곳",
                 "coordinates": [33.228517, 126.308868],
-                "distance": "2km",
-                "rating": 4.0,
+                "distance": "3.8km",
+                "rating": 4.3,
                 "difficulty": "중급",
                 "route": {
                     "type": "왕복",

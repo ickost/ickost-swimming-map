@@ -657,6 +657,37 @@ SPOT_DATA = {
                     }
                 ]
             },
+             "대평포구(박수기정)": {
+                "title": "대평포구(박수기정))",
+                "description": "절벽이 바다와 닿은 곳",
+                "coordinates": [33.228517, 126.308868],
+                "distance": "2km",
+                "rating": 4.0,
+                "difficulty": "중급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.236450, 126.358639], "type": "start"},
+                        {"name": "경유지점", "coords": [33.235266, 126.355441], "type": "waypoint"},
+                        {"name": "경유지점(박수기정)", "coords": [33.234153, 126.349841], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.234153, 126.349841], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.236361, 126.344326], "type": "waypoint"},
+                        {"name": "반환지점", "coords": [33.237330, 126.344026], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.236361, 126.344326], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.234153, 126.349841], "type": "waypoint"},
+                        {"name": "경유지점(박수기정)", "coords": [33.234153, 126.349841], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.235266, 126.355441], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.236450, 126.358639], "type": "end"}
+                    ]
+                },
+                "videos": [
+                    {
+                        "url": "https://youtu.be/X2sNi8QUA5A",
+                        "title": "구석구석 아름다운 곳",
+                        "description": "박수기정, 산방산, 푸른바다"
+                    }
+                ]
+            },
             "월평포구": {
                 "title": "월평포구-해송횟집(진곶내)",
                 "description": "오로지 물길로만 가능한 곳, 진곳",

@@ -1321,23 +1321,39 @@ def create_map(spot_data):
                 '''
 
             # 메인 마커 (기존 코드)
-            popup_html = f"""
-            <style>
-            .leaflet-popup-content-wrapper {{
-                border: none !important;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.8) !important;
-            }}
-            .leaflet-popup-tip {{
-                border: none !important;
-                background: #181818 !important;
-            }}
-            </style>
-            <div style="width: 260px; font-family: 'Roboto', sans-serif; 
-                        background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden; margin: 0; padding: 0;">
-                <div style="padding: 12px;">
-                    <h3 style="margin: 0 0 6px 0; font-size: 14px; color: #ffffff;">
-                        {spot['title']}
-                    </h3>
+           popup_html = f"""
+           <style>
+           .leaflet-popup {{
+               border: none !important;
+               box-shadow: 0 8px 32px rgba(0,0,0,0.8) !important;
+           }}
+           .leaflet-popup-content-wrapper {{
+               border: none !important;
+               background: #181818 !important;
+               box-shadow: none !important;
+               padding: 0 !important;
+               margin: 0 !important;
+           }}
+           .leaflet-popup-content {{
+               margin: 0 !important;
+               padding: 0 !important;
+               border: none !important;
+               background: #181818 !important;
+           }}
+           .leaflet-popup-tip-container {{
+               display: none !important;
+           }}
+           .leaflet-popup-tip {{
+               display: none !important;
+           }}
+           </style>
+           <div style="width: 260px; font-family: 'Roboto', sans-serif; 
+                       background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden; margin: 0; padding: 0;">
+               <div style="padding: 12px;">
+                   <h3 style="margin: 0 0 6px 0; font-size: 14px; color: #ffffff;">
+                       {spot['title']}
+                   </h3>
+        <!-- 나머지 내용은 그대로 -->
                     <div style="color: #aaaaaa; font-size: 13px; margin-bottom: 12px;">
                         조회수 {spot['views']}회 • {spot['date']}
                     </div>

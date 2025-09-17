@@ -1510,11 +1510,31 @@ def index():
             border-radius: 12px; 
             overflow: hidden; 
             box-shadow: 0 2px 16px rgba(0,0,0,0.4); 
-            height: 30vh; /* 뷰포트 높이의 70% */
-            min-height: 250px; /* 최소 높이 보장 */
+            height: 60vh; /* 모바일에서 더 큰 비율 */
+            min-height: 400px;
+            position: relative; /* 추가 */
         }
-                
-        .map-container iframe { width: 100% !important; height: 100% !important; }
+
+        .map-container iframe, 
+        .map-container > div { 
+            width: 100% !important; 
+            height: 100% !important; 
+            border-radius: 12px; /* 지도도 둥근 모서리 적용 */
+        }
+
+        /* 모바일 전용 설정 */
+        @media (max-width: 767px) {
+            .map-container { 
+                height: 70vh; /* 모바일에서는 더 크게 */
+                min-height: 350px;
+                margin: 0 -16px; /* 컨테이너 패딩만큼 확장 */
+                border-radius: 0; /* 모바일에서는 둥근 모서리 제거 */
+            }
+            .map-container iframe,
+            .map-container > div {
+                border-radius: 0;
+            }
+        }
 
         .map-info {
             background: #212121;

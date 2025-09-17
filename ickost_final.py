@@ -1353,7 +1353,6 @@ def create_map(spot_data):
                    <h3 style="margin: 0 0 6px 0; font-size: 14px; color: #ffffff;">
                        {spot['title']}
                    </h3>
-        <!-- 나머지 내용은 그대로 -->
                     <div style="color: #aaaaaa; font-size: 13px; margin-bottom: 12px;">
                         조회수 {spot['views']}회 • {spot['date']}
                     </div>

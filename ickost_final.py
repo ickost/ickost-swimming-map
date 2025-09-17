@@ -1525,8 +1525,8 @@ def index():
             border-radius: 12px; 
             overflow: hidden; 
             box-shadow: 0 2px 16px rgba(0,0,0,0.4); 
-            height: 60vh; /* 모바일에서 더 큰 비율 */
-            min-height: 400px;
+            height: 30vh; /* 모바일에서 더 큰 비율 */
+            min-height: 200px;
             position: relative; /* 추가 */
         }
 
@@ -1540,8 +1540,8 @@ def index():
         /* 모바일 전용 설정 */
         @media (max-width: 767px) {
             .map-container { 
-                height: 70vh; /* 모바일에서는 더 크게 */
-                min-height: 350px;
+                height: 30vh; /* 모바일에서는 더 크게 */
+                min-height: 250px;
                 margin: 0 -16px; /* 컨테이너 패딩만큼 확장 */
                 border-radius: 0; /* 모바일에서는 둥근 모서리 제거 */
             }
@@ -1921,7 +1921,7 @@ def spot_detail(location, spot_id):
             route_map = folium.Map(
                 location=spot_data['coordinates'],
                 zoom_start=14,
-                tiles='CartoDB dark_matter'
+                tiles='Esri.WorldImagery'
             )
 
             # 경로선 그리기

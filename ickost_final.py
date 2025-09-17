@@ -1322,6 +1322,16 @@ def create_map(spot_data):
 
             # 메인 마커 (기존 코드)
             popup_html = f"""
+            <style>
+            .leaflet-popup-content-wrapper {{
+                border: none !important;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.8) !important;
+            }}
+            .leaflet-popup-tip {{
+                border: none !important;
+                background: #181818 !important;
+            }}
+            </style>
             <div style="width: 260px; font-family: 'Roboto', sans-serif; 
                         background: #181818; color: #ffffff; border-radius: 8px; overflow: hidden; margin: 0; padding: 0;">
                 <div style="padding: 12px;">

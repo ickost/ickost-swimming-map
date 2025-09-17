@@ -1921,7 +1921,7 @@ def spot_detail(location, spot_id):
             route_map = folium.Map(
                 location=spot_data['coordinates'],
                 zoom_start=14,
-                tiles='Esri.WorldImagery'
+                tiles='CartoDB positron'
             )
 
             # 경로선 그리기

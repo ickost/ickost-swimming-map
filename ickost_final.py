@@ -2065,7 +2065,7 @@ def spot_detail(location, spot_id):
             background: #212121;
             border-radius: 8px;
             overflow: hidden;
-            height: 400px;
+            height: 200px;
             margin-bottom: 16px;
         }
         .route-stats {

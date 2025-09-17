@@ -1368,7 +1368,7 @@ def create_map(spot_data):
             marker_html = f'''
 
             <div style="width: {marker_size}px; height: {marker_size}px; background: #ff0000;
-                    border: 3px solid #ffffff; border-radius: 12px; display: flex; align-items: center;
+                    border: 1px solid #ffffff; border-radius: 12px; display: flex; align-items: center;
                     justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4); cursor: pointer;"
                 onclick="window.open('/spot/{quote(location)}/{quote(spot['spot_id'])}', '_blank')">               
                <svg width="{int(marker_size*0.5)}" height="{int(marker_size*0.5)}" viewBox="0 0 24 24" fill="white">
@@ -1500,8 +1500,8 @@ def index():
             border-radius: 12px; 
             overflow: hidden; 
             box-shadow: 0 2px 16px rgba(0,0,0,0.4); 
-            height: 70vh; /* 뷰포트 높이의 70% */
-            min-height: 400px; /* 최소 높이 보장 */
+            height: 40vh; /* 뷰포트 높이의 70% */
+            min-height: 300px; /* 최소 높이 보장 */
         }
                 
         .map-container iframe { width: 100% !important; height: 100% !important; }
@@ -1674,7 +1674,7 @@ def index():
             .stat-number { font-size: 24px; }
             .stat-label { font-size: 13px; }
             .section-title { font-size: 20px; }
-            .map-container { height: 65vh; min-height: 500px; }
+            .map-container { height: 45vh; min-height: 350px; }
             .spots-grid { grid-template-columns: 1fr; gap: 20px; }
             .spot-thumbnail { width: 160px; height: 120px; }
             .spot-title { font-size: 15px; }
@@ -1687,7 +1687,7 @@ def index():
             .stat-card { padding: 20px; }
             .stat-number { font-size: 28px; }
             .stat-label { font-size: 14px; }
-            .map-container { height: 60vh; min-height: 600px; }
+            .map-container { height: 50vh; min-height: 400px; }
             .spots-grid { grid-template-columns: repeat(2, 1fr); }
             .spot-card { display: block; }
             .spot-thumbnail { width: 100%; height: 200px; }

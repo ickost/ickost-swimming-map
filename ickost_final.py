@@ -1510,8 +1510,8 @@ def index():
             border-radius: 12px; 
             overflow: hidden; 
             box-shadow: 0 2px 16px rgba(0,0,0,0.4); 
-            height: 40vh; /* 뷰포트 높이의 70% */
-            min-height: 300px; /* 최소 높이 보장 */
+            height: 30vh; /* 뷰포트 높이의 70% */
+            min-height: 250px; /* 최소 높이 보장 */
         }
                 
         .map-container iframe { width: 100% !important; height: 100% !important; }
@@ -1684,7 +1684,7 @@ def index():
             .stat-number { font-size: 24px; }
             .stat-label { font-size: 13px; }
             .section-title { font-size: 20px; }
-            .map-container { height: 45vh; min-height: 350px; }
+            .map-container { height: 35vh; min-height: 250px; }
             .spots-grid { grid-template-columns: 1fr; gap: 20px; }
             .spot-thumbnail { width: 160px; height: 120px; }
             .spot-title { font-size: 15px; }
@@ -1697,7 +1697,7 @@ def index():
             .stat-card { padding: 20px; }
             .stat-number { font-size: 28px; }
             .stat-label { font-size: 14px; }
-            .map-container { height: 50vh; min-height: 400px; }
+            .map-container { height: 40vh; min-height: 300px; }
             .spots-grid { grid-template-columns: repeat(2, 1fr); }
             .spot-card { display: block; }
             .spot-thumbnail { width: 100%; height: 200px; }

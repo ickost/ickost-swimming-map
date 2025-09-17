@@ -433,6 +433,11 @@ SPOT_DATA = {
                         "url": "https://youtu.be/i4B9aJZrxBY",
                         "title": "연대포구",
                         "description": "스노클링 최적지"
+                    },
+                    {
+                        "url": "https://youtu.be/-1l341tbbJc?si=lOqdpcKEaEWCjjvO",
+                        "title": "연대포구",
+                        "description": "스노클링 최적지"
                     }
                 ]
             },
@@ -966,6 +971,11 @@ SPOT_DATA = {
                 "videos": [
                     {
                         "url": "https://youtu.be/Ml7Cb8eoyPQ",
+                        "title": "세기알해변 수영",
+                        "description": "김녕의 보석 같은 해변"
+                    },
+                    {
+                        "url": "https://youtu.be/JWALemPamVQ?si=-ycb0R2vhCUgvOly",
                         "title": "세기알해변 수영",
                         "description": "김녕의 보석 같은 해변"
                     }

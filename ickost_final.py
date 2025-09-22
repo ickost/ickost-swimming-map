@@ -1361,19 +1361,19 @@ def create_map(spot_data):
                     </div>
                     <div style="display: flex; gap: 12px; margin: 0 0 8px 0; padding: 8px 0; 
                                 border-top: 1px solid #3d3d3d; border-bottom: 1px solid #3d3d3d;">
-                        <div style="text-align: center; color: #aaaaaa; font-size: 11px;">
+                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
                             <div style="color: #ffffff; font-weight: 500;">{spot.get('calculated_distance', spot['distance'])}</div>
                             <div>실제거리</div>
                         </div>
-                        <div style="text-align: center; color: #aaaaaa; font-size: 11px;">
+                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
                             <div style="color: #ffffff; font-weight: 500;">{spot.get('estimated_time', 'N/A')}</div>
                             <div>예상시간</div>
                         </div>
-                        <div style="text-align: center; color: #aaaaaa; font-size: 11px;">
+                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
                             <div style="color: {get_difficulty_color(spot['difficulty'])}; font-weight: 500;">{spot['difficulty']}</div>
                             <div>난이도</div>
                         </div>
-                        <div style="text-align: center; color: #aaaaaa; font-size: 11px;">
+                        <div style="text-align: center; color: #aaaaaa; font-size: 12px;">
                             <div style="color: #ffaa00; font-weight: 500;">★{spot['rating']}</div>
                             <div>평점</div>
                         </div>
@@ -1572,7 +1572,7 @@ def index():
         .location-section { margin-bottom: 32px; }
         .location-header { display: flex; align-items: center; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
         .location-title { font-size: 18px; font-weight: 600; color: #ffffff; }
-        .spot-count { background: #3d3d3d; color: #aaaaaa; padding: 4px 8px; border-radius: 12px; font-size: 11px; }
+        .spot-count { background: #3d3d3d; color: #aaaaaa; padding: 4px 8px; border-radius: 12px; font-size: 12px; }
 
         .sort-controls { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; }
         .sort-label { color: #aaaaaa; font-size: 13px; }
@@ -1623,7 +1623,7 @@ def index():
             color: white; 
             padding: 2px 4px; 
             border-radius: 3px; 
-            font-size: 10px; 
+            font-size: 12px; 
         }
         .video-count-badge { 
             position: absolute; 
@@ -1633,7 +1633,7 @@ def index():
             color: white; 
             padding: 2px 6px; 
             border-radius: 3px; 
-            font-size: 10px; 
+            font-size: 12px; 
             font-weight: 500;
         }
         .route-type-badge {
@@ -1642,7 +1642,7 @@ def index():
             right: 4px;
             padding: 2px 6px;
             border-radius: 3px;
-            font-size: 9px;
+            font-size: 12px;
             font-weight: 500;
             color: white;
         }
@@ -1697,11 +1697,11 @@ def index():
             -webkit-line-clamp: 2; 
             -webkit-box-orient: vertical; 
         }
-        .spot-meta { color: #aaaaaa; font-size: 11px; margin-bottom: 6px; }
+        .spot-meta { color: #aaaaaa; font-size: 12px; margin-bottom: 6px; }
         .spot-stats { 
             display: flex; 
             gap: 12px; 
-            font-size: 11px; 
+            font-size: 12px; 
             flex-wrap: wrap; 
         }
         .spot-stat { color: #aaaaaa; }
@@ -1958,7 +1958,7 @@ def spot_detail(location, spot_id):
                     <div style="width: 20px; height: 20px; background: linear-gradient(45deg, #00d4ff, #0099cc); 
                                 border: 2px solid #ffffff; border-radius: 6px; display: flex; align-items: center; 
                                 justify-content: center; box-shadow: 0 0 12px #00d4ff;">
-                        <span style="color: black; font-weight: bold; font-size: 10px;">""" + str(i) + """</span>
+                        <span style="color: black; font-weight: bold; font-size: 12px;">""" + str(i) + """</span>
                     </div>"""
 
                 folium.Marker(
@@ -2105,7 +2105,7 @@ def spot_detail(location, spot_id):
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: bold;
             color: white;
         }

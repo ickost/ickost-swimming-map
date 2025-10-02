@@ -544,6 +544,11 @@ SPOT_DATA = {
                         "url": "https://youtu.be/O-So_u-d5Gk",
                         "title": "곽지해수욕장 수영",
                         "description": "제주 서쪽 바다의 아름다운 색깔들"
+                    },
+                    {
+                        "url": "https://youtu.be/S3vaSsJxYoQ",
+                        "title": "곽지해수욕장 수영",
+                        "description": "제주 서쪽 바다의 아름다운 색깔들"
                     }
                 ]
             },
@@ -751,6 +756,11 @@ SPOT_DATA = {
                 "videos": [
                     {
                         "url": "https://youtu.be/WwQ7GhNW1dQ",
+                        "title": "외돌개 수영",
+                        "description": "서귀포 필수코스 바다수영"
+                    },
+                    {
+                        "url": "https://youtu.be/9U04BFmeGis",
                         "title": "외돌개 수영",
                         "description": "서귀포 필수코스 바다수영"
                     }

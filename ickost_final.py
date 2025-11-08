@@ -1099,7 +1099,8 @@ SPOT_DATA = {
                         "title": "정주항-서우봉",
                         "description": "가볍게 즐기는 함덕바다"
                     }
-                ]            
+                ]
+            },
             "관곶": {
                 "title": "관곶-정주항",
                 "description": "섬속을 누비는 즐거움",

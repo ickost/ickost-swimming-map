@@ -610,6 +610,34 @@ SPOT_DATA = {
                 ]
                 
             },
+            "신도포구-엉알해변": {
+                "title": "신도포구-엉알해변",
+                "description": "수월봉을 따라 가는 바닷길",
+                "coordinates": [33.277543, 126.169358],
+                "distance": "4km",
+                "rating": 3.8,
+                "difficulty": "고급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.277543, 126.169358], "type": "start"},
+                        {"name": "경유지점", "coords": [33.277737, 126.167828], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.284948, 126.162228], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.291759, 126.159532], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.296332, 126.160669], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.298538, 126.165304], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.298090, 126.167085], "type": "end"}
+                    ]
+                },
+                "videos": [
+                    {
+                        "url": "https://youtu.be/8FpRrK_pmrM",
+                        "title": "신도포구-엉알해변",
+                        "description": "수월봉을 따라 가는 바닷길"
+                    }
+                ]
+                
+            },
             "송악산항": {
                 "title": "송악산항-하도방파제",
                 "description": "서쪽제1경 송악산 한바퀴",

@@ -1081,8 +1081,8 @@ SPOT_DATA = {
             "정주항-서우봉": {
                 "title": "정주항-서우봉",
                 "description": "가볍게 즐기는 함덕바다",
-                "coordinates": [33.544800, 126.674291],
-                "distance": "1.9km",
+                "coordinates": [33.547626, 126.662014],
+                "distance": "2.3km",
                 "rating": 4.1,
                 "difficulty": "초급",
                 "route": {

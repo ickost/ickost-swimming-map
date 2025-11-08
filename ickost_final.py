@@ -549,7 +549,12 @@ SPOT_DATA = {
                         "url": "https://youtu.be/S3vaSsJxYoQ",
                         "title": "곽지해수욕장 수영",
                         "description": "제주 서쪽 바다의 아름다운 색깔들"
-                    }
+                    },
+                    {
+                        "url": "https://youtu.be/GWdYBmgyNwM",
+                        "title": "곽지해수욕장 수영",
+                        "description": "제주 서쪽 바다의 아름다운 색깔들"
+                    }                    
                 ]
             },
             "비양도": {
@@ -1016,7 +1021,12 @@ SPOT_DATA = {
                         "url": "https://youtu.be/JWALemPamVQ?si=-ycb0R2vhCUgvOly",
                         "title": "세기알해변 수영",
                         "description": "김녕의 보석 같은 해변"
-                    }
+                    },
+                    {
+                        "url": "https://youtu.be/5n2GapfEvR0",
+                        "title": "세기알해변 수영",
+                        "description": "마라톤대회 후 바다수영"
+                    }                    
                 ]
             },
             "북촌환해장성": {
@@ -1068,6 +1078,28 @@ SPOT_DATA = {
                     }
                 ]
             },
+            "정주항-서우봉": {
+                "title": "정주항-서우봉",
+                "description": "가볍게 즐기는 함덕바다",
+                "coordinates": [33.544800, 126.674291],
+                "distance": "1.9km",
+                "rating": 4.1,
+                "difficulty": "초급",
+                "route": {
+                    "type": "왕복",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.547626, 126.662014], "type": "start"},
+                        {"name": "반환지점", "coords": [33.546244, 126.674110], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.547626, 126.662014], "type": "end"}
+                    ]
+                },
+                "videos": [
+                    {
+                        "url": "https://youtu.be/hq9HngNNTuc",
+                        "title": "정주항-서우봉",
+                        "description": "가볍게 즐기는 함덕바다"
+                    }
+                ]            
             "관곶": {
                 "title": "관곶-정주항",
                 "description": "섬속을 누비는 즐거움",

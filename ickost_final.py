@@ -617,7 +617,7 @@ SPOT_DATA = {
             },
              "차귀도": {
                 "title": "자구내포구-와도-차귀도",
-                "description": "최대 난이도",
+                "description": "조류 끝판왕",
                 "coordinates": [33.307682, 126.163438],
                 "distance": "6.5km",
                 "rating": 4.8,
@@ -643,13 +643,13 @@ SPOT_DATA = {
                         {"name": "경유지점", "coords": [33.311769, 126.159176], "type": "waypoint"},
                         {"name": "경유지점", "coords": [33.312073, 126.161677], "type": "waypoint"},
                         {"name": "경유지점", "coords": [33.310230, 126.163757], "type": "waypoint"},
-                        {"name": "퇴수지점", "coords": [33.307742, 126.163473], "type": "end"}
+                        {"name": "퇴수지점", "coords": [33.307682, 126.163438], "type": "end"}
                     ]
                 },
                 "videos": [
                     {
-                        "url": "https://youtu.be/OAMg4xvu-YA?si=HiRWdhToNzFE0MW0",
-                        "title": "차귀도",
+                        "url": "https://youtu.be/OAMg4xvu-YA?si=c2-MlvX6I53l_b_y",
+                        "title": "자구내포구-와도-차귀도",
                         "description": "조류 끝판왕"
                     }
                 ]

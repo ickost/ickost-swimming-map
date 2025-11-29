@@ -747,7 +747,7 @@ SPOT_DATA = {
                         {"name": "경유지점", "coords": [33.238584, 126.397445], "type": "waypoint"},
                         {"name": "경유지점", "coords": [33.231728, 126.385149], "type": "waypoint"},
                         {"name": "경유지점", "coords": [33.230580, 126.377940], "type": "waypoint"},
-                        {"name": "퇴수지점", "coords": 33.232500, 126.377232], "type": "end"}
+                        {"name": "퇴수지점", "coords": [33.232500, 126.377232], "type": "end"}
                     ]
                 },
                 "videos": [

@@ -615,6 +615,46 @@ SPOT_DATA = {
                 ]
                 
             },
+             "차귀도": {
+                "title": "자구내포구-와도-차귀도",
+                "description": "최대 난이도",
+                "coordinates": [33.307682, 126.163438],
+                "distance": "6.5km",
+                "rating": 4.8,
+                "difficulty": "고급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.307682, 126.163438], "type": "start"},
+                        {"name": "경유지점", "coords": [33.310319, 126.163701], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.311008, 126.161992], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.310466, 126.160449], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.310643, 126.159211], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.311079, 126.160511], "type": "waypoint"}
+                        {"name": "경유지점", "coords": [33.311642, 126.159182], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.313004, 126.152549], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.314220, 126.150935], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.312691, 126.143694], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.310506, 126.143740], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.309442, 126.146638], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.309869, 126.150287], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.311218, 126.150549], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.311218, 126.153561], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.311769, 126.159176], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.312073, 126.161677], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.310230, 126.163757], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": [33.307742, 126.163473], "type": "end"}
+                    ]
+                },
+                "videos": [
+                    {
+                        "url": "https://youtu.be/OAMg4xvu-YA?si=HiRWdhToNzFE0MW0",
+                        "title": "차귀도",
+                        "description": "조류 끝판왕"
+                    }
+                ]
+                
+            },
             "신도포구-엉알해변": {
                 "title": "신도포구-엉알해변",
                 "description": "수월봉을 따라 가는 바닷길",

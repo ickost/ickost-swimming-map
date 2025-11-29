@@ -630,7 +630,7 @@ SPOT_DATA = {
                         {"name": "경유지점", "coords": [33.311008, 126.161992], "type": "waypoint"},
                         {"name": "경유지점", "coords": [33.310466, 126.160449], "type": "waypoint"},
                         {"name": "경유지점", "coords": [33.310643, 126.159211], "type": "waypoint"},
-                        {"name": "경유지점", "coords": [33.311079, 126.160511], "type": "waypoint"}
+                        {"name": "경유지점", "coords": [33.311079, 126.160511], "type": "waypoint"},
                         {"name": "경유지점", "coords": [33.311642, 126.159182], "type": "waypoint"},
                         {"name": "경유지점", "coords": [33.313004, 126.152549], "type": "waypoint"},
                         {"name": "경유지점", "coords": [33.314220, 126.150935], "type": "waypoint"},

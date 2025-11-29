@@ -731,6 +731,33 @@ SPOT_DATA = {
                     }
                 ]
             },
+             "중문색달해변": {
+                "title": "중문색달해변-예래포구",
+                "description": "중문이 관광단지인 이유",
+                "coordinates": [33.245124, 126.410886],
+                "distance": "4km",
+                "rating": 4.6,
+                "difficulty": "고급",
+                "route": {
+                    "type": "편도",
+                    "points": [
+                        {"name": "입수지점", "coords": [33.245124, 126.410886], "type": "start"},
+                        {"name": "경유지점", "coords": [33.244345, 126.410877], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.242892, 126.406221], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.238584, 126.397445], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.231728, 126.385149], "type": "waypoint"},
+                        {"name": "경유지점", "coords": [33.230580, 126.377940], "type": "waypoint"},
+                        {"name": "퇴수지점", "coords": 33.232500, 126.377232], "type": "end"}
+                    ]
+                },
+                "videos": [
+                    {
+                        "url": "https://youtu.be/xppoi_hcl4U?si=qu1k4geqRwqzfAcD",
+                        "title": "천연파도풀",
+                        "description": "중문색달해수욕장, 높은 파도, 기가막힌 해선"
+                    }
+                ]
+            },
             "월평포구": {
                 "title": "월평포구-해송횟집(진곶내)",
                 "description": "오로지 물길로만 가능한 곳, 진곳",

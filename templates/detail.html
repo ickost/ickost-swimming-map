@@ -1,0 +1,17 @@
+{% from 'icons.html' import icon %}
+<!doctype html><html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#001621">
+<title>{{spot.title}} · ICKOST</title>
+<link rel="stylesheet" href="/static/design-tokens.css"><link rel="stylesheet" href="/static/detail.css">
+</head><body>
+<header class="detail-header"><a class="back-link" href="/">{{icon('arrow-left')}} 지도보기</a><a class="wordmark" href="/">ICKOST<span>바다수영 지도</span></a><a class="youtube-link" aria-label="유튜브 채널" href="https://www.youtube.com/@ickost" target="_blank" rel="noopener noreferrer">{{icon('youtube')}}<span>유튜브 채널</span></a></header>
+<main class="page">
+<div class="breadcrumb"><a href="/">수영 지도</a><span>/</span>{{location}}</div>
+<section class="spot-header"><div class="spot-heading"><span class="eyebrow">{{location}} · {{spot.difficulty}}</span><h1>{{spot.title}}</h1><p>{{spot.description}}</p></div><div class="spot-info-grid">
+{% for value,label in [(calculated_distance,'수영 거리'),(estimated_time|string+'분','예상 시간'),(spot.difficulty,'난이도'),(spot.rating,'평점'),(videos|length|string+'개','수영 영상')] %}<div class="info-item"><b>{{value}}</b><span>{{label}}</span></div>{% endfor %}
+{% if route_info %}<div class="info-item"><b>{{route_info.type}}</b><span>경로 유형</span></div>{% endif %}
+</div></section>
+{% if route_info %}<section class="route-section"><div class="section-head"><h2>수영 경로</h2><span><i class="route-key {{'dashed' if route_info.type == '편도' else ''}}"></i>{{route_info.type}}</span></div><div class="route-layout"><div class="route-map-container"><iframe title="{{spot.title}} 수영 경로 지도" srcdoc="{{route_map_html}}" loading="lazy"></iframe></div><div class="route-points"><h3>경로 포인트</h3>{% for point in route_info.points %}<div class="route-point"><span class="point-number {{'endpoint' if loop.first or loop.last else ''}}">{{loop.index}}</span><div><strong>{{point.name}}</strong><small>{{'%.6f'|format(point.coords[0])}}, {{'%.6f'|format(point.coords[1])}}</small></div></div>{% endfor %}</div></div></section>{% endif %}
+<section class="videos-section"><div class="section-head"><h2>이 바다의 수영 영상</h2><span>{{videos|length}}개의 기록</span></div><div class="videos-grid">{% for video in videos %}<a class="video-card" href="{{video.url}}" target="_blank" rel="noopener noreferrer"><div class="video-thumbnail"><img src="{{video.thumbnail}}" alt="{{video.title}}" loading="lazy"><span class="video-duration">{{video.duration}}</span><span class="play-btn">{{icon('play')}}</span></div><div class="video-info"><h3>{{video.title}}</h3><p>{{video.description}}</p><span>조회수 {{video.views}}회 · {{video.date}}</span></div></a>{% endfor %}</div></section>
+<footer>바다에서 쌓아온 기록, ICKOST <a href="/">지도에서 더 둘러보기 {{icon('arrow-up-right')}}</a></footer>
+</main></body></html>

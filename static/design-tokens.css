@@ -1,0 +1,13 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+:root {
+  --navy:#001621; --orange:#ff4103; --orange-ink:#b93000; --ink:#1a1a1a;
+  --muted:#616970; --subtle:#879097; --surface:#fff; --sunken:#f7f7f7;
+  --line:#e6e6e6; --control:#ccc; --selected:#fff3ed; --focus:#ff4103;
+  --radius-control:6px; --radius-card:12px; --radius-sheet:20px;
+  --ease:cubic-bezier(.2,0,0,1); --font:Pretendard,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+.icon{display:inline-block;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;flex-shrink:0}
+button,a,input,select{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+button,input,select{font:inherit}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}

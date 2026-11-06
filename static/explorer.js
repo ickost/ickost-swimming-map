@@ -3,6 +3,8 @@ const spots = JSON.parse(document.getElementById('spot-data').textContent).map((
 const $ = id => document.getElementById(id);
 const state = {region: '전체', selected: null, visible: []};
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const icon = name => `<svg class="icon" aria-hidden="true"><use href="/static/icons.svg#${name}"></use></svg>`;
+const routeStyle = spot => ({color: spot.route?.type === '편도' ? '#001621' : '#ff4103', dashArray: spot.route?.type === '편도' ? '8 6' : null});
 const levelClass = level => level === '고급' ? 'hard' : level === '중급' ? 'medium' : '';
 let map, layers, selectedLayer;
 const markers = new Map();
@@ -25,7 +27,7 @@ function initMap() {
   selectedLayer = L.layerGroup().addTo(map);
 }
 function pinIcon(active = false) {
-  return L.divIcon({className: `map-pin${active ? ' active' : ''}`, html:'<div class="pin-body"><span>≈</span></div>', iconSize: active ? [38, 38] : [32, 32], iconAnchor: [16, 32]});
+  return L.divIcon({className: `map-pin${active ? ' active' : ''}`, html:`<div class="pin-body">${icon('wave')}</div>`, iconSize: [44, 44], iconAnchor: [22, 40]});
 }
 function routePoints(spot) { return (spot.route?.points || []).map(p => p.coords); }
 function fitResults() {
@@ -38,7 +40,7 @@ function renderMap() {
   layers.clearLayers(); selectedLayer.clearLayers(); markers.clear();
   state.visible.forEach(spot => {
     const points = routePoints(spot);
-    if (points.length > 1) L.polyline(points, {color: spot.route?.type === '편도' ? '#d28a44' : '#167d86', weight:3, opacity:.6}).addTo(layers);
+    if (points.length > 1) L.polyline(points, {...routeStyle(spot), weight:3, opacity:.7}).addTo(layers);
     const marker = L.marker(spot.coordinates, {icon:pinIcon(), title:spot.title, alt:spot.title, keyboard:true}).addTo(layers);
     marker.bindTooltip(escapeHTML(spot.title), {direction:'top', offset:[0,-28]});
     marker.on('click', () => selectSpot(spot.id, true));
@@ -52,7 +54,7 @@ function card(spot) {
     <span class="thumbnail">${image(spot.thumbnail, '')}<span class="duration">${escapeHTML(spot.duration)}</span></span>
     <span class="card-info"><span class="card-topline">${escapeHTML(spot.region)}<span>·</span><span class="difficulty ${levelClass(spot.difficulty)}">${escapeHTML(spot.difficulty)}</span></span>
     <h2>${escapeHTML(spot.title)}</h2><span class="card-description" style="display:block">${escapeHTML(spot.description)}</span>
-    <span class="card-bottom"><strong>${escapeHTML(spot.calculated_distance)}</strong><span>${escapeHTML(spot.route?.type || '')}</span><span>영상 ${spot.video_count}</span><span class="rating">★ ${spot.rating.toFixed(1)}</span></span></span></button>`;
+    <span class="card-bottom"><strong>${escapeHTML(spot.calculated_distance)}</strong><span>${escapeHTML(spot.route?.type || '')}</span><span>영상 ${spot.video_count}</span><span class="rating">${icon('star')} ${spot.rating.toFixed(1)}</span></span></span></button>`;
 }
 function update() {
   const query = $('search').value.trim().toLowerCase();
@@ -70,13 +72,13 @@ function update() {
   $('spot-list').innerHTML = state.visible.map(card).join('');
   $('result-count').textContent = state.visible.length;
   $('empty').hidden = state.visible.length > 0;
-  $('map-caption').textContent = state.visible.length ? `${state.region === '전체' ? '우리의 바다' : state.region}, ${state.visible.length}개의 출발점` : '검색 조건에 맞는 장소가 없습니다';
+  $('map-caption').textContent = state.visible.length ? `${state.region === '전체' ? '전체 지역' : state.region} · ${state.visible.length}개의 수영 장소` : '검색 조건에 맞는 장소가 없습니다';
   $('announcement').textContent = `${state.visible.length}개의 수영 장소가 검색되었습니다.`;
   renderMap();
 }
 function setMapView(enabled) {
   document.body.classList.toggle('map-view', enabled);
-  $('view-toggle').textContent = enabled ? '목록 보기 ☷' : '지도 보기 ↗';
+  $('view-toggle').innerHTML = `${icon(enabled ? 'list' : 'map')}<span>${enabled ? '목록보기' : '지도보기'}</span>`;
   $('view-toggle').setAttribute('aria-pressed', String(enabled));
   if (map) requestAnimationFrame(() => {map.invalidateSize(); if (state.selected === null) fitResults();});
 }
@@ -91,7 +93,7 @@ function selectSpot(id, fromMap = false) {
   if (fromMap && !matchMedia('(max-width:760px)').matches) $('spot-list').querySelector(`[data-id="${id}"]`)?.scrollIntoView({block:'nearest'});
   $('detail-content').innerHTML = `${image(spot.thumbnail, spot.title, 'detail-cover')}<div class="detail-body"><span class="detail-region">${escapeHTML(spot.region)} · ${escapeHTML(spot.route?.type || '')}</span><h2>${escapeHTML(spot.title)}</h2><p class="detail-description">${escapeHTML(spot.description)}</p>
     <div class="detail-stats"><div><b>${escapeHTML(spot.calculated_distance)}</b><span>수영 거리</span></div><div><b>${escapeHTML(spot.estimated_time)}</b><span>예상 시간</span></div><div><b>${escapeHTML(spot.difficulty)}</b><span>난이도</span></div></div>
-    <a class="detail-link" href="${escapeHTML(spot.detail_url)}">전체 경로·영상 보기 ↗</a><h3>이 바다의 수영 영상 <span>(${spot.video_count})</span></h3>
+    <a class="detail-link" href="${escapeHTML(spot.detail_url)}">전체 경로·영상 ${icon('arrow-up-right')}</a><h3>이 바다의 수영 영상 <span>(${spot.video_count})</span></h3>
     ${spot.videos.map(video => `<a class="video-item" href="${escapeHTML(video.url)}" target="_blank" rel="noopener noreferrer">${image(video.thumbnail, '')}<span><strong>${escapeHTML(video.title)}</strong><small>${escapeHTML(video.duration)} · 조회수 ${escapeHTML(video.viewCount)}회</small></span></a>`).join('')}</div>`;
   $('detail').hidden = false; $('detail').scrollTop = 0;
   if (matchMedia('(max-width:760px)').matches) setMapView(true);
@@ -102,8 +104,8 @@ function selectSpot(id, fromMap = false) {
     const points = routePoints(spot);
     if (points.length > 1) {
       L.polyline(points, {color:'#fff', weight:9, opacity:.95}).addTo(selectedLayer);
-      L.polyline(points, {color:spot.route?.type === '편도' ? '#d28a44' : '#167d86', weight:5, opacity:1}).addTo(selectedLayer);
-      [points[0], points[points.length-1]].forEach(p => L.circleMarker(p, {radius:5,color:'#fff',weight:2,fillColor:'#167d86',fillOpacity:1}).addTo(selectedLayer));
+      L.polyline(points, {...routeStyle(spot), weight:5, opacity:1}).addTo(selectedLayer);
+      [points[0], points[points.length-1]].forEach(p => L.circleMarker(p, {radius:5,color:'#fff',weight:2,fillColor:'#ff4103',fillOpacity:1}).addTo(selectedLayer));
     }
     const mobile = matchMedia('(max-width:760px)').matches;
     // Reserve space for the side panel / bottom sheet so the selected route stays visible.

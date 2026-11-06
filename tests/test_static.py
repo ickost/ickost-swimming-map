@@ -52,7 +52,7 @@ class StaticTests(unittest.TestCase):
                 self.assertIn(spot['region'], SPOT_DATA)
                 self.assertEqual(len(spot['videos']), spot['video_count'])
                 self.assertTrue(spot['detail_url'].startswith('/spot/'))
-            for asset in ('explorer.js', 'explorer.css'):
+            for asset in ('explorer.js', 'explorer.css', 'design-tokens.css', 'detail.css', 'icons.svg'):
                 with client.get('/static/' + asset) as response:
                     self.assertEqual(response.status_code, 200)
 

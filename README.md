@@ -61,3 +61,11 @@ PR에서는 배포하지 않으며, 외부 fork PR에는 API secret이 전달되
 새 주소에서 동작을 검증하고 공유 링크를 교체한 뒤 Railway 서비스와 과금 항목을 직접 정리합니다.
 `up.railway.app` 주소는 Cloudflare로 이전할 수 없습니다. 기존 사용자에게 새 주소를 안내하세요.
 이 저장소 변경 자체는 Railway 서비스를 삭제하거나 구독을 해지하지 않습니다.
+
+## 디자인
+
+오렌지 레드 `#FF4103`와 딥 네이비 `#001621`을 브랜드 색상으로 사용합니다.
+`static/design-tokens.css`에 Pretendard 글꼴과 색상·모서리·모션 기준을 정의하고,
+`static/icons.svg`에 24px / 1.5px 스트로크의 공통 SVG 아이콘을 둡니다.
+홈은 `explorer.css`, 상세 페이지는 `detail.css`와 `templates/detail.html`에서 관리합니다.
+지도는 왕복(오렌지 실선) / 편도(네이비 점선)로 구분합니다.
